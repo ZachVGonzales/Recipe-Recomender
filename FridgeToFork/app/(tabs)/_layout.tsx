@@ -32,6 +32,17 @@ export default function TabLayout() {
           ),
         }}
       />
+
+  <Tabs.Screen
+        name="fridge"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'search' : 'search'} color={color} />
+          ),
+        }}
+      />
+      
     </Tabs>
   );
 }
