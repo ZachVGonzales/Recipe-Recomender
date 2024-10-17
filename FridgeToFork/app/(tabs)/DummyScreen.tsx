@@ -19,8 +19,8 @@ const ProfileScreen: React.VFC = () => {
       {/* Additional Profile Data */}
       <View style={styles.profileDetails}>
         <Text style={styles.detailText}>Email: davidefalessi@gmail.com</Text>
-        <Text style={styles.detailText}>Location: Rome, Italy</Text>
-        <Text style={styles.detailText}>Bio: Greatest professor of all time. Best at chess after sid, gal, zach, and aiden</Text>
+        <Text style={styles.detailText}>Location: Roma, Italy</Text>
+        <Text style={styles.detailText}>Bio: Greatest professor of all time. Best at chess after gal</Text>
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>

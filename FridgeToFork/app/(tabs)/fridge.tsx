@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform, View, Alert } from 'react-native';
+import { StyleSheet, Image, Platform, View, Alert, Text } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -14,8 +14,9 @@ import Recipe from '@/components/Recipe';
 
 export default function TabTwoScreen() {
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <LoginBox></LoginBox>
+    <View style={styles.container}>
+        <Text style = {styles.recipeText}>RECIPES</Text>
+        <LoginBox></LoginBox>
       <View style={styles.recipeContainer}>
         <Recipe
           title="Spaghetti Carbonara"
@@ -56,16 +57,25 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+
+    },
     scrollContainer: {
-      padding: 20, // Adjust as needed
+      padding: 10, // Adjust as needed
     },
     recipeContainer: {
       flexDirection: 'column', // Stack recipes on top of each other
       position: 'relative',    // Use relative positioning to allow custom positioning
-      top: 140,                 // Adjust top position as needed
+      top: 130,                 // Adjust top position as needed
       left: 0,                 // Adjust left position as needed
       right: 0,                // Adjust right position as needed
       justifyContent: 'center', // Center the items horizontally
       alignItems: 'center',     // Align the items in the center vertically
     },
+    recipeText: {
+        top: 30, 
+        fontWeight: 'bold',
+        fontSize: 40,
+      }
   });

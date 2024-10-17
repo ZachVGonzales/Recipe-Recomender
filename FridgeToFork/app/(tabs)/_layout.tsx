@@ -11,7 +11,8 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,   // Active icon color
+        tabBarInactiveTintColor: 'gray',                             // Inactive icon color
         headerShown: false,
       }}>
       <Tabs.Screen
@@ -26,23 +27,30 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: 'Fridge',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'add-circle' : 'add-circle-outline'} color={color} />
           ),
         }}
       />
-
-  <Tabs.Screen
+      <Tabs.Screen
         name="fridge"
         options={{
-          title: 'Search',
+          title: 'Recipes',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'search' : 'search'} color={color} />
+            <TabBarIcon name={focused ? 'search' : 'search-outline'} color={color} />
           ),
         }}
       />
-      
+      <Tabs.Screen
+        name="DummyScreen"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'happy' : 'happy-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
