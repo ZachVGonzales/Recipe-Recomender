@@ -128,11 +128,7 @@ export default function FridgeScreen() {
         </TouchableOpacity>
       </View>
       
-    </View>
-
-    
-
-    
+    </View>    
   );
 
   return (
@@ -156,7 +152,6 @@ export default function FridgeScreen() {
         renderItem={renderItem}
         contentContainerStyle={styles.listContainer}
       />
-
       
     </View>
     
