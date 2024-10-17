@@ -59,7 +59,9 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
+        top: -60,
+        left: 20,
+        width: '90%',
     },
     scrollContainer: {
       padding: 10, // Adjust as needed
@@ -74,7 +76,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',     // Align the items in the center vertically
     },
     recipeText: {
-        top: 30, 
+        top: 120,
+        left:10, 
         fontWeight: 'bold',
         fontSize: 40,
       }
