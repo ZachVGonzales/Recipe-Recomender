@@ -12,7 +12,7 @@ type RecipeItem = {
   onPress: () => void;
 };
 
-type FriendActivity = {
+type FriendActivityProps = {
   id: string;
   name: string;
   activity: string;
@@ -20,10 +20,21 @@ type FriendActivity = {
 
 // Data object type
 type HomePageData = {
-  friendActivity: FriendActivity[];
+  friendActivity: FriendActivityProps[];
   recentRecipes: RecipeItem[];
   suggestedRecipes: RecipeItem[];
 };
+
+
+const FriendActivity: React.FC<FriendActivityProps> = ({ name, activity }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.name}>{name}</Text>
+      <Text style={styles.activity}>{activity}</Text>
+    </View>
+  );
+};
+
 
 
 const homePageData: HomePageData = {
@@ -57,14 +68,15 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => (
 
 
 export default function HomeScreen() {
-  const [data, setData] = useState<HomePageData>(homePageData);
+  const [data] = useState<HomePageData>(homePageData);
 
-  const renderFriendActivity = ({ item }: { item: FriendActivity }) => (
-    <View style={styles.container}>
-      <Text style={styles.friendActivity}>
-            {item.name} {item.activity}
-      </Text>
-    </View>
+  const renderFriendActivity = ({ item }: { item: FriendActivityProps }) => (
+    <FriendActivity
+      id={item.id}
+      key={item.id}
+      name={item.name}
+      activity={item.activity}
+    />
   );
 
   const renderRecipeItem = ({ item }: { item: RecipeItem }) => (
@@ -79,15 +91,16 @@ export default function HomeScreen() {
   );
 
   return (
-    <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+    <ScrollView style={styles.scrollContainer}>
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
       {/* Friend Activity Section */}
       <Text style={styles.sectionTitle}>Friend Activity</Text>
       <FlatList
-        data={homePageData.friendActivity}
-        keyExtractor={(item) => item.id}
-        renderItem={renderFriendActivity}
-        horizontal={false}
+        data={data.friendActivity}          // The friend activity data
+        keyExtractor={(item) => item.id}    // Extract unique key from each item
+        renderItem={renderFriendActivity}   // Render each activity using renderFriendActivity function
+        horizontal={false}                  // Set to vertical list by default
+        showsVerticalScrollIndicator={false}
       />
 
       {/* Recent Recipes Section */}
@@ -115,7 +128,8 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flex: 1,
+    flexGrow: 1, // Ensures content stretches vertically
+    padding: 16,
     backgroundColor: '#fff',
   },
   scrollContent: {
@@ -128,10 +142,15 @@ const styles = StyleSheet.create({
     marginBottom: 40
   },
   container: {
-    flexGrow: 1, // ensures the ScrollView takes the full height
-    justifyContent: 'center', // centers vertically
-    alignItems: 'center', // centers horizontally
+    backgroundColor: '#f8f8f8',
     padding: 16,
+    borderRadius: 8,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   section: {
     marginBottom: 24,
@@ -172,5 +191,14 @@ const styles = StyleSheet.create({
     right: 0,                // Adjust right position as needed
     justifyContent: 'center', // Center the items horizontally
     alignItems: 'center',     // Align the items in the center vertically
+  },
+  name: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  activity: {
+    fontSize: 14,
+    marginTop: 4,
+    color: '#555',
   },
 });
