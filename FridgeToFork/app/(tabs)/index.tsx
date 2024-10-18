@@ -28,9 +28,16 @@ type HomePageData = {
 
 const FriendActivity: React.FC<FriendActivityProps> = ({ name, activity }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.activity}>{activity}</Text>
+    <View style={styles.basicContainer}>
+      {/* Name on the left */}
+      <View style={styles.nameContainer}>
+        <Text style={styles.name}>{name}</Text>
+      </View>
+
+      {/* Activity on the right, in its own box */}
+      <View style={styles.activityBox}>
+        <Text style={styles.activityText}>{activity}</Text>
+      </View>
     </View>
   );
 };
@@ -53,20 +60,6 @@ const homePageData: HomePageData = {
 };
 
 
-// Define the props for the RecipeCard component
-type RecipeCardProps = {
-  recipe: RecipeItem;
-};
-
-// RecipeCard component
-const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => (
-  <View style={styles.recipeCard}>
-    <Image source={{ uri: recipe.image }} style={styles.recipeImage} />
-    <Text style={styles.recipeTitle}>{recipe.title}</Text>
-  </View>
-);
-
-
 export default function HomeScreen() {
   const [data] = useState<HomePageData>(homePageData);
 
@@ -80,7 +73,7 @@ export default function HomeScreen() {
   );
 
   const renderRecipeItem = ({ item }: { item: RecipeItem }) => (
-    <View style={styles.container}>
+    <View style={styles.basicContainer}>
       <Recipe
         title={item.title}
         image={item.image}
@@ -136,14 +129,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   containerTitle: {
-    fontSize: 40,
-    fontWeight: 'bold',
+    fontSize: 60,
     textAlign: 'center', // centers text
-    marginBottom: 40
+    marginBottom: 40,
+    fontFamily: 'italiano',
+    fontStyle: 'italic'
   },
-  container: {
-    backgroundColor: '#f8f8f8',
+  basicContainer: {
+    flexDirection: 'row',         // Name and activity in a row
+    alignItems: 'center',         // Align them vertically centered
+    justifyContent: 'space-between', // Ensure they are spaced correctly
     padding: 16,
+    backgroundColor: '#D7EBD5',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
@@ -152,15 +149,23 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  recipeContainer: {
+    borderRadius: 8,
+    marginBottom: 10,
+    elevation: 2,
+    justifyContent: 'center', // Center the items horizontally
+    alignItems: 'center',     // Align the items in the center vertically
+  },
   section: {
     marginBottom: 24,
     alignItems: 'center', // center text inside each section
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
-    textAlign: 'center', // centers text
+    textAlign: 'left', // centers text
+    marginTop: 35
   },
   friendActivity: {
     fontSize: 16,
@@ -183,22 +188,31 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center', // centers text
   },
-  recipeContainer: {
-    flexDirection: 'column', // Stack recipes on top of each other
-    position: 'relative',    // Use relative positioning to allow custom positioning
-    top: 140,                 // Adjust top position as needed
-    left: 0,                 // Adjust left position as needed
-    right: 0,                // Adjust right position as needed
-    justifyContent: 'center', // Center the items horizontally
-    alignItems: 'center',     // Align the items in the center vertically
+  nameContainer: {
+    flex: 1,                       // 30% of the container width
+    justifyContent: 'center',       // Vertically center the text
+    alignItems: 'flex-start',       // Align text to the left
+  },
+  activityBox: {
+    flex: 9,                       // 70% of the container width
+    backgroundColor: '#ffffff',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    justifyContent: 'center',       // Vertically center the text
+    alignItems: 'flex-start',       // Ensure text is aligned at the same point
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   name: {
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  activity: {
+  activityText: {
     fontSize: 14,
-    marginTop: 4,
-    color: '#555',
+    color: '#666',
   },
 });
