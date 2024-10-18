@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, ScrollView, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, SectionList, Alert, TouchableOpacity } from 'react-native';
 import Recipe from '@/components/Recipe';
 import { WebBrowserCompleteAuthSessionResult } from 'expo-web-browser';
 
@@ -16,6 +16,12 @@ type FriendActivityProps = {
   id: string;
   name: string;
   activity: string;
+}
+
+// Define a type for the SectionList data
+interface SectionData {
+  title: string;
+  data: (FriendActivityProps | RecipeItem)[];
 }
 
 // Data object type
@@ -61,7 +67,20 @@ const homePageData: HomePageData = {
 
 
 export default function HomeScreen() {
-  const [data] = useState<HomePageData>(homePageData);
+  const sections: SectionData[] = [
+    {
+      title: 'Friend Activity',
+      data: homePageData.friendActivity,
+    },
+    {
+      title: 'Recent Recipes',
+      data: homePageData.recentRecipes,
+    },
+    {
+      title: 'Suggested Recipes',
+      data: homePageData.suggestedRecipes,
+    },
+  ];
 
   const renderFriendActivity = ({ item }: { item: FriendActivityProps }) => (
     <FriendActivity
@@ -84,44 +103,33 @@ export default function HomeScreen() {
   );
 
   return (
-    <ScrollView style={styles.scrollContainer}>
+    <View style={styles.scrollContainer}>
+      {/* Add the title here */}
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
-      {/* Friend Activity Section */}
-      <Text style={styles.sectionTitle}>Friend Activity</Text>
-      <FlatList
-        data={data.friendActivity}          // The friend activity data
-        keyExtractor={(item) => item.id}    // Extract unique key from each item
-        renderItem={renderFriendActivity}   // Render each activity using renderFriendActivity function
-        horizontal={false}                  // Set to vertical list by default
-        showsVerticalScrollIndicator={false}
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => item.id || index.toString()}
+        renderItem={({ item, section }) => {
+          // Use type guards to determine the type of the item
+          if ('activity' in item) {
+            return renderFriendActivity({ item });
+          } else {
+            return renderRecipeItem({ item });
+          }
+        }}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={styles.sectionTitle}>{title}</Text>
+        )}
+        stickySectionHeadersEnabled={false}
       />
-
-      {/* Recent Recipes Section */}
-      <Text style={styles.sectionTitle}>Recent Recipes</Text>
-      <FlatList
-        data={homePageData.recentRecipes}
-        keyExtractor={(item) => item.id}
-        renderItem={renderRecipeItem}
-        horizontal={false}
-      />
-
-      {/* Suggested Recipes Section */}
-      <Text style={styles.sectionTitle}>Suggested Recipes</Text>
-      <FlatList
-        data={homePageData.suggestedRecipes}
-        keyExtractor={(item) => item.id}
-        renderItem={renderRecipeItem}
-        horizontal={false}
-      />
-    </ScrollView>
-    
+    </View>
   );
 }
 
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1, // Ensures content stretches vertically
+    flex: 1, // Ensures content stretches vertically
     padding: 16,
     backgroundColor: '#fff',
   },
@@ -190,12 +198,12 @@ const styles = StyleSheet.create({
     textAlign: 'center', // centers text
   },
   nameContainer: {
-    flex: 2,                       // 30% of the container width
+    flex: 1.5,                       // 30% of the container width
     justifyContent: 'center',       // Vertically center the text
     alignItems: 'flex-start',       // Align text to the left
   },
   activityBox: {
-    flex: 8,                       // 70% of the container width
+    flex: 9,                       // 70% of the container width
     backgroundColor: '#ffffff',
     paddingVertical: 8,
     paddingHorizontal: 12,
