@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     textAlign: 'left', // centers text
-    marginTop: 35
+    marginTop: 35,
+    fontFamily: 'italiano',
   },
   friendActivity: {
     fontSize: 16,
@@ -189,12 +190,12 @@ const styles = StyleSheet.create({
     textAlign: 'center', // centers text
   },
   nameContainer: {
-    flex: 1,                       // 30% of the container width
+    flex: 2,                       // 30% of the container width
     justifyContent: 'center',       // Vertically center the text
     alignItems: 'flex-start',       // Align text to the left
   },
   activityBox: {
-    flex: 9,                       // 70% of the container width
+    flex: 8,                       // 70% of the container width
     backgroundColor: '#ffffff',
     paddingVertical: 8,
     paddingHorizontal: 12,
