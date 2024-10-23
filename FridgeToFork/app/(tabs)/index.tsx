@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, SectionList, Alert, TouchableOpacity } from 'react-native';
 import Recipe from '@/components/Recipe';
 import { WebBrowserCompleteAuthSessionResult } from 'expo-web-browser';
+import { LogBox } from 'react-native';
+
+// Inside your main component or App.js
+LogBox.ignoreLogs([
+  'Reduced motion setting is enabled on this device',
+]);
+
 
 // Type for items within each category
 type RecipeItem = {
