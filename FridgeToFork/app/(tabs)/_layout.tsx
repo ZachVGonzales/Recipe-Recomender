@@ -16,7 +16,7 @@ export default function TabLayout() {
         headerShown: false,
       }}>
       <Tabs.Screen
-        name="index"
+        name="home_page"
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
@@ -25,16 +25,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Fridge',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'add-circle' : 'add-circle-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="fridge"
+        name="find_recipes"
         options={{
           title: 'Recipes',
           tabBarIcon: ({ color, focused }) => (
@@ -43,7 +34,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="DummyScreen"
+        name="fridge"
+        options={{
+          title: 'Fridge',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'add-circle' : 'add-circle-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile_page"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (

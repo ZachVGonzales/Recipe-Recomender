@@ -56,7 +56,6 @@ const FriendActivity: React.FC<FriendActivityProps> = ({ name, activity }) => {
 };
 
 
-
 const homePageData: HomePageData = {
   friendActivity: [
     { id: '1', name: 'Alice', activity: 'Liked Spaghetti Bolognese' },
