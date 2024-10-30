@@ -2,9 +2,12 @@
 import React, { useState, useEffect  } from 'react';
 import { StyleSheet, View, Alert, Text, TextInput } from 'react-native';
 import { fetchRecipes, searchRecipes } from '../../api/recipeServiceAxios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useRouter } from 'expo-router';
 
 
-import Recipe from '@/components/Recipe';
+
+
 import { FlatList } from 'react-native-gesture-handler';
 
 
@@ -20,9 +23,9 @@ interface RecipeItem {
 
 
 export default function RecipeScreen() {
-
   const [searchText, setSearchText] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     // Load initial list of recipes
@@ -50,11 +53,20 @@ export default function RecipeScreen() {
     }
   };
 
+  const handleRecipeSelect = (recipe: RecipeItem) => {
+    // Navigate to recipe_details and pass the recipe ID as a parameter
+    router.push({pathname: "../recipe_details", params: {id: recipe.id}});
+  };
+
+
   const renderRecipeItem = ({ item }: {item: RecipeItem}) => (
-    <View style={styles.basicContainer}>
+    <TouchableOpacity 
+      style={styles.basicContainer}
+      onPress={() => handleRecipeSelect(item)} // Navigate on press
+    >
       <Text style={styles.title}>{item.name}</Text>
       <Text>Time: {item.minutes} mins</Text>
-    </View>    
+    </TouchableOpacity>
   );
 
   return (
