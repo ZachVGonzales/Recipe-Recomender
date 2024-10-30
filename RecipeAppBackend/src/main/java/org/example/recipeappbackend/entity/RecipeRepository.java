@@ -38,4 +38,17 @@ public class RecipeRepository {
                         rs.getString("ingredients")
                 ));
     }
+
+    public Recipe getRecipeByID(Integer id) {
+        String sql = "SELECT id, name, minutes, description, instructions, ingredients FROM recipe WHERE id = ? LIMIT 1";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id},
+                (rs, rowNum) -> new Recipe(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("minutes"),
+                        rs.getString("description"),
+                        rs.getString("instructions"),
+                        rs.getString("ingredients")
+                ));
+    }
 }
