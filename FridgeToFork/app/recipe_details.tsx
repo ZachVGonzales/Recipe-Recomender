@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView  } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 
 interface RecipeItem {
@@ -15,19 +16,53 @@ interface RecipeItem {
 
 
 const RecipeDetailScreen = () => {
+  const { id } = useLocalSearchParams();
+  const [recipe, setRecipe] = useState<RecipeItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/recipes/getByID/${id}`);
+        if (!response.ok) throw new Error("Recipe not found");
+        const data = await response.json();
+        setRecipe(data);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchRecipe();
+  }, [id]);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  if (!recipe) {
+    return <Text>Recipe not found</Text>;
+  }
+
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={{ padding: 16 }}>
       <View style={styles.nameContainer}>
-        <Text style={styles.title}>Name here...</Text>
-        <Text>Time: ## mins</Text>
+        <Text style={styles.title}>Name: {recipe.name}</Text>
+        <Text>Time: {recipe.minutes} minutes</Text>
       </View>
       <View style={styles.basicContainer}>
         <Text style={styles.sectionTitle}>Ingredients:</Text>
+        {recipe.ingredients.map((ingredient, index) => (
+          <Text key={index}>- {ingredient}</Text>
+        ))}
       </View>
       <View style={styles.basicContainer}>
         <Text style={styles.sectionTitle}>Instructions:</Text>
+        {recipe.instructions.map((step, index) => (
+          <Text key={index}>{index + 1}. {step}</Text>
+        ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

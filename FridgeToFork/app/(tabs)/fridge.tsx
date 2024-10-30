@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
+
 
 // Define the valid categories as a union type
 type Category = 'Meats' | 'Grains' | 'Veggies' | 'Fruits' | 'Others';
@@ -71,8 +73,14 @@ const initialData: Data = {
 export default function FridgeScreen() {
   const [data, setData] = useState<Data>(initialData);
   const [selectedCategory, setSelectedCategory] = useState<Category>('Meats');
+  const router = useRouter();
 
   const categories: Category[] = ['Meats', 'Grains', 'Veggies', 'Fruits', 'Others'];
+
+  const handleIngredientSelect = () => {
+    // Navigate to recipe_details and pass the recipe ID as a parameter
+    router.push({pathname: "../add_ingredients"});
+  };
 
   // Function to increase item quantity
   const increaseQuantity = (category: Category, itemId: string) => {
@@ -137,9 +145,9 @@ export default function FridgeScreen() {
     <View style={styles.container}>
 
       <Text style = {styles.fridgeText}>FRIDGE</Text>
-      <TouchableOpacity style={styles.addButton} onPress={() => {}}>
-  <Text style={styles.addButtonText}>+</Text>
-</TouchableOpacity>
+      <TouchableOpacity style={styles.addButton} onPress={() => {handleIngredientSelect()}}>
+        <Text style={styles.addButtonText}>+</Text>
+      </TouchableOpacity>
       {/* Category Tabs */}
       <View style={styles.tabsContainer}>
         {categories.map((category) => renderCategoryTab(category))}
@@ -176,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   activeTab: {
-    backgroundColor: '#1fcb25',
+    backgroundColor: '#8ccc72',
   },
   categoryText: {
     fontSize: 16,
@@ -222,11 +230,11 @@ const styles = StyleSheet.create({
   },
   addButton: {
     top: -10,
-    left: 330,
+    left: 1250,
     width: 50,               // Width of the circle
     height: 50,              // Height of the circle
     borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#1fcb25',  // Green background color
+    backgroundColor: '#8ccc72',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android

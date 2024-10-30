@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleLogin = () => {
-    Alert.alert('Login clicked', `Username: ${username}, Password: ${password}`);
+    router.push("/(tabs)/")
   };
 
   const handleForgotPassword = () => {

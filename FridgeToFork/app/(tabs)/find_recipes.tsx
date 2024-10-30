@@ -5,9 +5,6 @@ import { fetchRecipes, searchRecipes } from '../../api/recipeServiceAxios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
-
-
-
 import { FlatList } from 'react-native-gesture-handler';
 
 
@@ -126,6 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+    paddingVertical: 10,
     margin: 10,
   },
   title: {
