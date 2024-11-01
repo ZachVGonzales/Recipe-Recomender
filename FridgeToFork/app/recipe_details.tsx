@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView  } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router';
 
 

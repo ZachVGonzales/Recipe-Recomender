@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect  } from 'react';
-import { StyleSheet, View, Alert, Text, TextInput } from 'react-native';
-import { fetchRecipes, searchRecipes } from '../../api/recipeServiceAxios';
+import { StyleSheet, View, Text, TextInput, Switch  } from 'react-native';
+import { fetchRecipes, searchRecipesName, searchRecipesIngredients } from '../../api/recipeServiceAxios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
@@ -22,6 +22,7 @@ interface RecipeItem {
 export default function RecipeScreen() {
   const [searchText, setSearchText] = useState('');
   const [recipes, setRecipes] = useState([]);
+  const [useAlternateSearch, setUseAlternateSearch] = useState(false); // State for switch
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +46,9 @@ export default function RecipeScreen() {
       const data = await fetchRecipes();
       setRecipes(data);
     } else {
-      const data = await searchRecipes(text);
+      const data = useAlternateSearch
+       ? await searchRecipesIngredients(text)
+       : await searchRecipesName(text)
       setRecipes(data);
     }
   };
@@ -69,6 +72,11 @@ export default function RecipeScreen() {
   return (
     <View style={styles.scrollContainer}>
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
+      <Text>Use Alternate Search</Text>
+        <Switch
+          value={useAlternateSearch}
+          onValueChange={setUseAlternateSearch}
+        />
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."

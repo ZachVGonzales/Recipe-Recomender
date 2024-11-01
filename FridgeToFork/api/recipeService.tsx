@@ -1,6 +1,5 @@
-import apiClient from './apiClient';
-
-const API_SEARCH = "http://localhost:8080/api/recipes/search";
+const API_SEARCH_NAMES = "http://localhost:8080/api/recipes/search/name";
+const API_SEARCH_INGREDIENTS = "http://localhost:8080/api/recipes/search/ingredients";
 const API_LIST = "http://localhost:8080/api/recipes/list"
 
 export const fetchRecipes = async () => {
@@ -13,12 +12,22 @@ export const fetchRecipes = async () => {
   }
 };
 
-export const searchRecipes = async (query: string) => {
+export const searchRecipesName = async (query: string) => {
   try {
-    const response = (await fetch(API_SEARCH)).json();
+    const response = (await fetch(API_SEARCH_NAMES)).json();
     return response;
   } catch (error) {
     console.error('Error searching recipes:', error);
     throw error;
   }
 };
+
+export const searchRecipesIngredients = async (query: string) => {
+  try {
+    const response = (await fetch(API_SEARCH_INGREDIENTS)).json();
+    return response;
+  } catch (error) {
+    console.error('Ingredient Search Error:', error);
+    throw error;
+  }
+}

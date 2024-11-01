@@ -34,9 +34,20 @@ export const fetchRecipes = async () => {
   }
 };
 
-export const searchRecipes = async (query: string) => {
+export const searchRecipesName = async (query: string) => {
   try {
-    const response = await apiClient.get(`/search?name=${query}`);
+    const response = await apiClient.get(`/search_name?name=${query}`);
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error('Error searching recipes:', error);
+    throw error;
+  }
+};
+
+export const searchRecipesIngredients = async (query: string) => {
+  try {
+    const response = await apiClient.get(`/search_ingredients?ingredients=${query}`);
     console.log(response.data)
     return response.data;
   } catch (error) {
