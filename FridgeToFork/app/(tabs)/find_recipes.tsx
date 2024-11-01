@@ -2,10 +2,8 @@
 import React, { useState, useEffect  } from 'react';
 import { StyleSheet, View, Text, TextInput, Switch  } from 'react-native';
 import { fetchRecipes, searchRecipesName, searchRecipesIngredients } from '../../api/recipeServiceAxios';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
-
-import { FlatList } from 'react-native-gesture-handler';
 
 
 // Type for items within each category
