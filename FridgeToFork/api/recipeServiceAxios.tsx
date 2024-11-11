@@ -25,7 +25,7 @@ apiClient.interceptors.response.use(
 
 export const fetchRecipes = async () => {
   try {
-    const response = await apiClient.get('/list');
+    const response = await apiClient.get('/recipes/list');
     console.log(response.data)
     return response.data;
   } catch (error) {
@@ -36,7 +36,7 @@ export const fetchRecipes = async () => {
 
 export const searchRecipesName = async (query: string) => {
   try {
-    const response = await apiClient.get(`/search_name?name=${query}`);
+    const response = await apiClient.get(`/recipes/search_name?name=${query}`);
     console.log(response.data)
     return response.data;
   } catch (error) {
@@ -47,7 +47,7 @@ export const searchRecipesName = async (query: string) => {
 
 export const searchRecipesIngredients = async (query: string) => {
   try {
-    const response = await apiClient.get(`/search_ingredients?ingredients=${query}`);
+    const response = await apiClient.get(`/recipes/search_ingredients?ingredients=${query}`);
     console.log(response.data)
     return response.data;
   } catch (error) {

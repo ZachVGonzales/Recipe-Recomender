@@ -1,22 +1,35 @@
+import { login, signup } from '../api/loginService';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useAuth } from './AuthContext';
 
-export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+
+export default function LoginScreen() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
+  const { applogin } = useAuth();
+  
 
-  const handleLogin = () => {
-    router.push("/(tabs)/")
+  const handleLogin = async () => {
+    const success = await login(username, password);
+    if (success) {
+      applogin()
+      router.push("./(home)/");  // Navigate to Home
+    } else {
+      Alert.alert("Login failed", "Invalid credentials, please try again.");
+    }
   };
 
-  const handleForgotPassword = () => {
-    Alert.alert('Forgot Password clicked');
-  };
-
-  const handleCreateAccount = () => {
-    Alert.alert('Create New Account clicked');
+  const handleSignUp = async () => {
+    const success = await signup(username, password);
+    if (success) {
+      applogin()
+      router.push("/(home)/");  // Navigate to Home
+    } else {
+      Alert.alert("Signup failed", "Invalid credentials, please try again.");
+    }
   };
 
   return (
@@ -42,18 +55,13 @@ export default function Login() {
         secureTextEntry
       />
 
-      {/* Forgot Password */}
-      <TouchableOpacity onPress={handleForgotPassword}>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-
       {/* Sign In Button */}
       <TouchableOpacity style={styles.signInButton} onPress={handleLogin}>
-        <Text style={styles.signInButtonText}>Sign In</Text>
+        <Text style={styles.signInButtonText}>Login</Text>
       </TouchableOpacity>
 
       {/* Create New Account */}
-      <TouchableOpacity onPress={handleCreateAccount}>
+      <TouchableOpacity onPress={handleSignUp}>
         <Text style={styles.createAccount}>Create New Account</Text>
       </TouchableOpacity>
     </View>

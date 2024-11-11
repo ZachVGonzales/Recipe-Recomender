@@ -10,8 +10,6 @@ import { useRouter } from 'expo-router';
 interface RecipeItem {
   id: number;
   name: string;
-  minutes: number;
-  description: string;
   instructions: string[];
   ingredients: string[];
 };
@@ -63,7 +61,6 @@ export default function RecipeScreen() {
       onPress={() => handleRecipeSelect(item)} // Navigate on press
     >
       <Text style={styles.title}>{item.name}</Text>
-      <Text>Time: {item.minutes} mins</Text>
     </TouchableOpacity>
   );
 

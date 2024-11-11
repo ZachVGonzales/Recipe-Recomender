@@ -50,8 +50,7 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'happy' : 'happy-outline'} color={color} />
           ),
         }}
-      />
-      <Tabs.Screen
+              /*
         name="login"
         options={{
           title: 'Login',
@@ -59,6 +58,7 @@ export default function TabLayout() {
             <TabBarIcon name={focused ? 'sad' : 'sad-outline'} color={color} />
           ),
         }}
+          */
       />
     </Tabs>
   );
