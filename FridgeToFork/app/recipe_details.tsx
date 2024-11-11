@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView  } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity  } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 
 
 interface RecipeItem {
@@ -45,6 +45,11 @@ const RecipeDetailScreen = () => {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <View style={styles.backButtonContainer}>
+        <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/find_recipes')}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.nameContainer}>
         <Text style={styles.title}>Name: {recipe.name}</Text>
         <Text>Time: {recipe.minutes} minutes</Text>
@@ -110,6 +115,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+  },
+  backContainer: {
+    backgroundColor: '#D7EBD5',  // Green background color
+    justifyContent: 'center', // Center the text inside
+    alignItems: 'center',    // Center the text inside
+    elevation: 5,            // Optional: shadow for Android
+    shadowColor: '#000',     // Optional: shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
+    shadowOpacity: 0.3,      // Optional: shadow for iOS
+    shadowRadius: 3,         // Optional: shadow for iOS
+    paddingVertical: 12,     // Increased vertical padding
+    paddingHorizontal: 20,   // Increased horizontal padding
+    borderRadius: 8,         // Rounded corners
+    minWidth: 120,           // Ensure the button has a minimum width
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  backButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: 20
   },
 });
 

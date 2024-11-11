@@ -1,5 +1,4 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
@@ -12,18 +11,12 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
   const [isReady, setIsReady] = useState(false);  // New state to track readiness
 
   useEffect(() => {
-    if (loaded) {
       SplashScreen.hideAsync();
       setIsReady(true);  // Update state when fonts are loaded and app is ready
-    }
-  }, [loaded]);
+  });
 
   if (!isReady) {
     return null;  // Don't render anything until everything is ready
@@ -39,19 +32,34 @@ export default function RootLayout() {
 }
 
 function AuthWrapper() {
-  const { isAuthenticated } = useAuth();  // Now useAuth is inside AuthProvider
+  const { isAuthenticated, loading } = useAuth();  // Now useAuth is inside AuthProvider
   console.log("is Authenticated? ", isAuthenticated)
 
+  if (loading) {
+    return null;
+  }
+
   return (
-    <Stack>
-      {isAuthenticated ? (
-        <Stack.Screen name="(home)" options={{ headerShown: false }} />
-      ) : (
-        <Stack.Screen name="login" options={{ headerShown: false }} />
+    <Stack initialRouteName="index">
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      {isAuthenticated && (
+        <Stack.Screen name="home" options={{headerShown: false}} />
       )}
-      <Stack.Screen name="+not-found" />
-      <Stack.Screen name="recipe_details" />
-      <Stack.Screen name="add_ingredients" />
+      {isAuthenticated && (
+        <Stack.Screen name="recipe_details" options={{headerShown: false}} />
+      )}
+      {isAuthenticated && (
+        <Stack.Screen name="add_ingredients" options={{headerShown: false}} />
+      )}
+      {isAuthenticated && (
+        <Stack.Screen name="find_recipes" options={{headerShown: false}} />
+      )}
+      {isAuthenticated && (
+        <Stack.Screen name="fridge" options={{headerShown: false}} />
+      )}
+      {isAuthenticated && (
+        <Stack.Screen name="profile_page" options={{headerShown: false}} />
+      )}
     </Stack>
   );
 }

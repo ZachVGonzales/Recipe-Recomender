@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect  } from 'react';
 import { StyleSheet, View, Text, TextInput, Switch  } from 'react-native';
-import { fetchRecipes, searchRecipesName, searchRecipesIngredients } from '../../api/recipeServiceAxios';
+import { fetchRecipes, searchRecipesName, searchRecipesIngredients } from '../api/recipeServiceAxios';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 
@@ -51,7 +50,7 @@ export default function RecipeScreen() {
 
   const handleRecipeSelect = (recipe: RecipeItem) => {
     // Navigate to recipe_details and pass the recipe ID as a parameter
-    router.push({pathname: "../recipe_details", params: {id: recipe.id}});
+    router.push({pathname: "./recipe_details", params: {id: recipe.id}});
   };
 
 
@@ -67,7 +66,13 @@ export default function RecipeScreen() {
   return (
     <View style={styles.scrollContainer}>
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
-      <Text>Use Alternate Search</Text>
+      <View style={styles.subTitleContainer}>
+        <Text>Use Alternate Search</Text>
+        <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+      </View>
+      
         <Switch
           value={useAlternateSearch}
           onValueChange={setUseAlternateSearch}
@@ -106,6 +111,12 @@ const styles = StyleSheet.create({
     fontFamily: 'italiano',
     fontStyle: 'italic'
   },
+  subTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    fontSize: 24
+  },
   basicContainer: {
     flexDirection: 'row',         // Name and activity in a row
     alignItems: 'center',         // Align them vertically centered
@@ -119,6 +130,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+  },
+  backContainer: {
+    backgroundColor: '#D7EBD5',  // Green background color
+    justifyContent: 'center', // Center the text inside
+    alignItems: 'center',    // Center the text inside
+    elevation: 5,            // Optional: shadow for Android
+    shadowColor: '#000',     // Optional: shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
+    shadowOpacity: 0.3,      // Optional: shadow for iOS
+    shadowRadius: 3,         // Optional: shadow for iOS
+    paddingVertical: 12,     // Increased vertical padding
+    paddingHorizontal: 20,   // Increased horizontal padding
+    borderRadius: 8,         // Rounded corners
+    minWidth: 120,           // Ensure the button has a minimum width
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#000',
+    fontWeight: 'bold',
   },
   searchBar: {
     height: 40,

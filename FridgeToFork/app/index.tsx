@@ -9,14 +9,15 @@ export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { applogin } = useAuth();
+  const { applogin, setLoading } = useAuth();
   
 
   const handleLogin = async () => {
     const success = await login(username, password);
     if (success) {
       applogin()
-      router.push("./(home)/");  // Navigate to Home
+      setLoading(false)
+      router.push("./home");  // Navigate to Home
     } else {
       Alert.alert("Login failed", "Invalid credentials, please try again.");
     }
@@ -26,7 +27,8 @@ export default function LoginScreen() {
     const success = await signup(username, password);
     if (success) {
       applogin()
-      router.push("/(home)/");  // Navigate to Home
+      setLoading(false)
+      router.push("./home");  // Navigate to Home
     } else {
       Alert.alert("Signup failed", "Invalid credentials, please try again.");
     }
