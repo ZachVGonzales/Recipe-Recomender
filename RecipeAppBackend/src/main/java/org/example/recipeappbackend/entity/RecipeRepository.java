@@ -2,7 +2,7 @@ package org.example.recipeappbackend.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+    import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
@@ -14,41 +14,35 @@ public class RecipeRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<Recipe> searchRecipes(String keyword) {
-        String sql = "SELECT id, name, minutes, description, instructions, ingredients FROM recipe WHERE name LIKE ? LIMIT 100";
+        String sql = "SELECT id, name, instructions, ingredient_values FROM recipes WHERE name LIKE ? LIMIT 100";
         return jdbcTemplate.query(sql, new Object[]{"%" + keyword + "%"},
                 (rs, rowNum) -> new Recipe(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getInt("minutes"),
-                        rs.getString("description"),
                         rs.getString("instructions"),
-                        rs.getString("ingredients")
+                        rs.getString("ingredient_values")
                 ));
     }
 
     public List<Recipe> listRecipes() {
-        String sql = "SELECT id, name, minutes, description, instructions, ingredients FROM recipe LIMIT 100";
+        String sql = "SELECT id, name, instructions, ingredient_values FROM recipes LIMIT 100";
         return jdbcTemplate.query(sql, new Object[]{},
                 (rs, rowNum) -> new Recipe(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getInt("minutes"),
-                        rs.getString("description"),
                         rs.getString("instructions"),
-                        rs.getString("ingredients")
+                        rs.getString("ingredient_values")
                 ));
     }
 
     public Recipe getRecipeByID(Integer id) {
-        String sql = "SELECT id, name, minutes, description, instructions, ingredients FROM recipe WHERE id = ? LIMIT 1";
+        String sql = "SELECT id, name, instructions, ingredient_values FROM recipes WHERE id = ? LIMIT 1";
         return jdbcTemplate.queryForObject(sql, new Object[]{id},
                 (rs, rowNum) -> new Recipe(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getInt("minutes"),
-                        rs.getString("description"),
                         rs.getString("instructions"),
-                        rs.getString("ingredients")
+                        rs.getString("ingredient_values")
                 ));
     }
 }

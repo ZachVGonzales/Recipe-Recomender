@@ -15,9 +15,16 @@ public class RecipeSearchController {
     @Autowired
     private RecipeRepository recipeRepository;
 
-    @GetMapping("/search")
-    public List<Recipe> searchRecipes(@RequestParam String name) {
+    @GetMapping("/search_name")
+    public List<Recipe> searchRecipesName(@RequestParam String name) {
         List<Recipe> searchedRecipes = recipeRepository.searchRecipes(name);
+        System.out.println(searchedRecipes);
+        return searchedRecipes;
+    }
+
+    @GetMapping("/search_ingredients")
+    public List<Recipe> searchRecipesIngredients(@RequestParam String ingredients) {
+        List<Recipe> searchedRecipes = recipeRepository.searchRecipes(ingredients);
         System.out.println(searchedRecipes);
         return searchedRecipes;
     }

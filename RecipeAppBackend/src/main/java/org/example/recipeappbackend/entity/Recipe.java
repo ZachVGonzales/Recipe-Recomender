@@ -8,16 +8,12 @@ import java.util.List;
 public class Recipe {
     private long id;
     private String name;
-    private long minutes;
-    private String description;
     private List<String> instructions;
     private List<String> ingredients;
 
-    public Recipe(int id, String name, int minutes, String description, String instructions, String ingredients) {
+    public Recipe(int id, String name, String instructions, String ingredients) {
         this.id = id;
         this.name = name;
-        this.minutes = minutes;
-        this.description = description;
         this.instructions = parseJson(instructions);
         this.ingredients = parseJson(ingredients);
     }
@@ -27,12 +23,6 @@ public class Recipe {
     }
     public String getName() {
         return name;
-    }
-    public String getDescription() {
-        return description;
-    }
-    public long getMinutes() {
-        return minutes;
     }
     public List<String> getIngredients() {
         return ingredients;
@@ -47,12 +37,6 @@ public class Recipe {
     public void setName(String name) {
         this.name = name;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    public void setMinutes(long minutes) {
-        this.minutes = minutes;
-    }
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
@@ -62,7 +46,7 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return String.format("id: %d, name: %s, minutes: %d, description: %s, ingredients: %s", id, name, minutes, description, ingredients);
+        return String.format("id: %d, name: %s, ingredients: %s", id, name, ingredients);
     }
 
     private List<String> parseJson(String ingredientsJson) {
