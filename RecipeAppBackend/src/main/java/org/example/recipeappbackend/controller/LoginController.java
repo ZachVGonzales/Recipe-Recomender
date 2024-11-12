@@ -18,11 +18,16 @@ public class LoginController {
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestParam String username, @RequestParam String password) {
         try {
-            boolean created = userRepository.createUserTable(username, password);
-            if (created) {
-                return ResponseEntity.ok("User registered successfully");
+            String userHash = userRepository.getUserHash(username, password);
+            if (userRepository.userTableExists(userHash)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User already exists");
+                boolean created = userRepository.createUserTable(username, password);
+                if (created) {
+                    return ResponseEntity.ok(userHash);
+                } else {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("User creation failed");
+                }
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during signup: " + e.getMessage());
@@ -35,7 +40,7 @@ public class LoginController {
             String userHash = userRepository.getUserHash(username, password);
             System.out.println(userHash);
             if (userRepository.userTableExists(userHash)) {
-                return ResponseEntity.ok("Login successful");
+                return ResponseEntity.ok(userHash);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
