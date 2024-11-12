@@ -44,7 +44,7 @@ export default function IngredientScreen() {
   };
 
   const handleIngredientSelect = (ingredient: IngredientItem) => {
-    router.push({ pathname: "/ingredient_details", params: { id: ingredient.id } });
+    router.push({ pathname: "./ingredient_details", params: { id: ingredient.id } });
   };
 
   const renderIngredientItem = ({ item }: { item: IngredientItem }) => (
