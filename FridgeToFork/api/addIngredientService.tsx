@@ -22,48 +22,24 @@ apiClient.interceptors.response.use(
 );
 
 
-export async function login(username: string, password: string): Promise<string | null> {
+export async function add_ingredient(xref_id: string, token: string): Promise<boolean> {
   try {
-    const response = await fetch("http://localhost:8080/api/login/login", {
+    const response = await fetch("http://localhost:8080/api/add_ingredient/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({ username, password }).toString(),
+      body: new URLSearchParams({ xref_id, token }).toString(),
     });
 
     if (response.ok) {
-      return await response.text();
+      return true;
     } else {
       console.error("Login failed:", await response.text());
-      return null;
+      return false;
     }
   } catch (error) {
     console.error("Error during login:", error);
-    return null;
-  }
-}
-
-
-
-export async function signup(username: string, password: string): Promise<string | null> {
-  try {
-    const response = await fetch("http://localhost:8080/api/login/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({ username, password }).toString(),
-    });
-
-    if (response.ok) {
-      return await response.text();
-    } else {
-      console.error("Signup failed:", await response.text());
-      return null;
-    }
-  } catch (error) {
-    console.error("Error during signup:", error);
-    return null;
+    return false;
   }
 }

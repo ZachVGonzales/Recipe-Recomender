@@ -1,6 +1,9 @@
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView , TouchableOpacity  } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams , useRouter } from 'expo-router';
+import { add_ingredient } from '../api/addIngredientService';
+import { getToken } from '../api/tokenUtils';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 
 interface IngredientItem {
@@ -22,8 +25,23 @@ const RecipeDetailScreen = () => {
   const handleBackSelect = () => {
     router.push({pathname: "/add_ingredients"});
   };
-  const handleAddSelect = () => {
-    router.push({pathname: "/fridge"});
+
+  const handleAddSelect = async (ingredient_id: string) => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const added = await add_ingredient(ingredient_id, token);
+        if (added) {
+          console.log("add ingredient successful!");
+          router.push("/add_ingredients")
+        }
+      } else {
+        console.error("token error")
+      }
+    } catch (error) {
+      console.error("Error adding Ingredient", error);
+    }
+    console.log("add ingredient unsuccessful");
   };
 
   useEffect(() => {
@@ -51,7 +69,7 @@ const RecipeDetailScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
+    <ScrollView style={styles.container}>
       <View style={styles.nameContainer}>
         <Text style={styles.title}>Name: {ingredient.name}</Text>
       </View>
@@ -61,10 +79,9 @@ const RecipeDetailScreen = () => {
       <TouchableOpacity style={styles.addButton} onPress={() => {handleBackSelect()}}>
         <Text style={styles.addButtonText}>Go Back</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.addButton} onPress={() => {handleAddSelect()}}>
+      <TouchableOpacity style={styles.addButton} onPress={() => {handleAddSelect(ingredient.id)}}>
         <Text style={styles.addButtonText}>Add Ingredient</Text>
       </TouchableOpacity>
-      
     </ScrollView>
     
 
@@ -77,6 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
+    alignContent: 'center',
   },
   title: {
     fontSize: 24,
