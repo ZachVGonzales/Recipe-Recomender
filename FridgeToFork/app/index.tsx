@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from './AuthContext';
+import { saveToken } from '../api/tokenUtils';
 
 
 export default function LoginScreen() {
@@ -13,24 +14,36 @@ export default function LoginScreen() {
   
 
   const handleLogin = async () => {
-    const success = await login(username, password);
-    if (success) {
-      applogin()
-      setLoading(false)
-      router.push("./home");  // Navigate to Home
-    } else {
-      Alert.alert("Login failed", "Invalid credentials, please try again.");
+    const token = await login(username, password);
+    try {
+      if (token) {
+        await saveToken(token);
+        applogin();
+        setLoading(false)
+        router.push("./home");  // Navigate to Home
+        console.log("token saved securely:", token)
+      } else {
+        Alert.alert("Login failed", "Invalid credentials, please try again.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
     }
   };
 
   const handleSignUp = async () => {
-    const success = await signup(username, password);
-    if (success) {
-      applogin()
-      setLoading(false)
-      router.push("./home");  // Navigate to Home
-    } else {
-      Alert.alert("Signup failed", "Invalid credentials, please try again.");
+    const token = await signup(username, password);
+    try {
+      if (token) {
+        await saveToken(token);
+        applogin();
+        setLoading(false)
+        router.push("./home");  // Navigate to Home
+        console.log("token saved securely:", token)
+      } else {
+        Alert.alert("Signup failed", "Invalid credentials, please try again.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
     }
   };
 
