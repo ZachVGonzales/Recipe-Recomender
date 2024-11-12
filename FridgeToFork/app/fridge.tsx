@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     top: -10,
-    left: 1250,
+    left: 1150,
     width: 50,               // Width of the circle
     height: 50,              // Height of the circle
     borderRadius: 25,        // Half of the width/height to make it circular
