@@ -1,6 +1,7 @@
 package org.example.recipeappbackend.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
@@ -46,5 +47,33 @@ public class UserRepository {
                 "xref_id INTEGER)";
         jdbcTemplate.execute(createTableSQL);
         return true;
+    }
+
+    public boolean addItem(int type, int xref_id, String token) {
+        if (userTableExists(token)) {
+            System.out.println("User table exists");
+            if (itemExists(type, xref_id, token)) {
+                System.out.println("Item already exists");
+                return false;
+            } else {
+                System.out.println("Adding new item");
+                String insertQuery = "INSERT INTO user_" + token + " (row_type, xref_id) VALUES (?,?)";
+                jdbcTemplate.update(insertQuery, type, xref_id);
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private boolean itemExists(int type, int xref_id, String token) {
+        String query = "SELECT COUNT(*) FROM user_" + token +
+                " WHERE row_type=" + type + " AND xref_id=" + xref_id;
+        try {
+            Integer count = jdbcTemplate.queryForObject(query, new Object[]{xref_id}, Integer.class);
+            return count != null && count > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
