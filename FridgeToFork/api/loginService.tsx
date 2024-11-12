@@ -22,7 +22,7 @@ apiClient.interceptors.response.use(
 );
 
 
-export async function login(username: string, password: string): Promise<boolean> {
+export async function login(username: string, password: string): Promise<string | null> {
   try {
     const response = await fetch("http://localhost:8080/api/login/login", {
       method: "POST",
@@ -33,20 +33,20 @@ export async function login(username: string, password: string): Promise<boolean
     });
 
     if (response.ok) {
-      return true;
+      return await response.text();
     } else {
       console.error("Signup failed:", await response.text());
-      return false;
+      return null;
     }
   } catch (error) {
     console.error("Error during signup:", error);
-    return false;
+    return null;
   }
 }
 
 
 
-export async function signup(username: string, password: string): Promise<boolean> {
+export async function signup(username: string, password: string): Promise<string | null> {
   try {
     const response = await fetch("http://localhost:8080/api/login/signup", {
       method: "POST",
@@ -57,13 +57,13 @@ export async function signup(username: string, password: string): Promise<boolea
     });
 
     if (response.ok) {
-      return true;
+      return await response.text();
     } else {
       console.error("Signup failed:", await response.text());
-      return false;
+      return null;
     }
   } catch (error) {
     console.error("Error during signup:", error);
-    return false;
+    return null;
   }
 }
