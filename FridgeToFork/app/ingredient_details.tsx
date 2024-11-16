@@ -1,18 +1,14 @@
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView , TouchableOpacity  } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams , useRouter } from 'expo-router';
-import { add_ingredient } from '../api/addIngredientService';
+import { add_ingredient } from '../api/userIngredientService';
 import { getToken } from '../api/tokenUtils';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 
 interface IngredientItem {
     id: string;
     name: string;
-    description: string;
-    nutrition: string;
   }
-
 
 
 const RecipeDetailScreen = () => {

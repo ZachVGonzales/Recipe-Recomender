@@ -1,165 +1,115 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet , TextInput} from 'react-native';
 import { useRouter } from 'expo-router';
+import { listUserIngredients, deleteUserIngredient } from '../api/userIngredientService'
+import { getToken } from '../api/tokenUtils'
 
 
-// Define the valid categories as a union type
-type Category = 'Meats' | 'Grains' | 'Veggies' | 'Fruits' | 'Others';
-
-// Type for items within each category
-type Item = {
-  id: string;
+interface IngredientItem {
+  id: number;
   name: string;
-  quantity: number;
-  unit: string; // Added the unit property
-};
-
-// Data object type
-type Data = {
-  [key in Category]: Item[];
-};
-
-// Example data with quantities and units
-const initialData: Data = {
-  Meats: [
-    { id: '1', name: 'Ground Beef', quantity: 100, unit: 'g' },
-    { id: '2', name: 'Chicken', quantity: 100, unit: 'g' },
-    { id: '3', name: 'Pork', quantity: 200, unit: 'g' },
-    { id: '4', name: 'Turkey', quantity: 150, unit: 'g' },
-    { id: '5', name: 'Bacon', quantity: 50, unit: 'g' },
-    { id: '6', name: 'Lamb', quantity: 120, unit: 'g' },
-    { id: '7', name: 'Duck', quantity: 140, unit: 'g' },
-  ],
-  Grains: [
-    { id: '1', name: 'Rice', quantity: 200, unit: 'g' },
-    { id: '2', name: 'Quinoa', quantity: 150, unit: 'g' },
-    { id: '3', name: 'Oats', quantity: 300, unit: 'g' },
-    { id: '4', name: 'Barley', quantity: 250, unit: 'g' },
-    { id: '5', name: 'Couscous', quantity: 100, unit: 'g' },
-    { id: '6', name: 'Wheat', quantity: 500, unit: 'g' },
-    { id: '7', name: 'Cornmeal', quantity: 400, unit: 'g' },
-  ],
-  Veggies: [
-    { id: '1', name: 'Carrots', quantity: 50, unit: 'g' },
-    { id: '2', name: 'Broccoli', quantity: 100, unit: 'g' },
-    { id: '3', name: 'Spinach', quantity: 70, unit: 'g' },
-    { id: '4', name: 'Cauliflower', quantity: 200, unit: 'g' },
-    { id: '5', name: 'Lettuce', quantity: 150, unit: 'g' },
-    { id: '6', name: 'Tomatoes', quantity: 120, unit: 'g' },
-    { id: '7', name: 'Peppers', quantity: 80, unit: 'g' },
-  ],
-  Fruits: [
-    { id: '1', name: 'Apple', quantity: 2, unit: 'pcs' },
-    { id: '2', name: 'Banana', quantity: 3, unit: 'pcs' },
-    { id: '3', name: 'Orange', quantity: 4, unit: 'pcs' },
-    { id: '4', name: 'Strawberries', quantity: 200, unit: 'g' },
-    { id: '5', name: 'Blueberries', quantity: 150, unit: 'g' },
-    { id: '6', name: 'Grapes', quantity: 300, unit: 'g' },
-    { id: '7', name: 'Pineapple', quantity: 1, unit: 'pcs' },
-  ],
-  Others: [
-    { id: '1', name: 'Milk', quantity: 1, unit: 'L' },
-    { id: '2', name: 'Cheese', quantity: 200, unit: 'g' },
-    { id: '3', name: 'Butter', quantity: 100, unit: 'g' },
-    { id: '4', name: 'Eggs', quantity: 12, unit: 'pcs' },
-    { id: '5', name: 'Yogurt', quantity: 500, unit: 'g' },
-    { id: '6', name: 'Cream', quantity: 250, unit: 'ml' },
-    { id: '7', name: 'Tofu', quantity: 300, unit: 'g' },
-  ],
-};
+}
 
 
 export default function FridgeScreen() {
-  const [data, setData] = useState<Data>(initialData);
-  const [selectedCategory, setSelectedCategory] = useState<Category>('Meats');
+  const [searchText, setSearchText] = useState('');
+  const [ingredients, setIngredients] = useState([]);
   const router = useRouter();
 
-  const categories: Category[] = ['Meats', 'Grains', 'Veggies', 'Fruits', 'Others'];
+  const loadUserIngredients = async () => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const data = await listUserIngredients(token);
+        setIngredients(data);
+      } else {
+        console.error("token error")
+      }
+    } catch (error) {
+      console.error('Failed to load user ingredients:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Load initial list of ingredients
+    loadUserIngredients();
+  }, []);
+
+  const handleSearch = async (text: string) => {
+    setSearchText(text);
+    const token = await getToken();
+    if (token) {
+      if (text === '') {
+        // Reset to full list when search bar is cleared
+        const data = await listUserIngredients(token);
+        setIngredients(data);
+      } else {
+        // TODO: implement search functionality here
+        console.log("search here...");
+      }
+    } else {
+      console.error("token error");
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    const token = await getToken();
+    if (token) {
+      const response = await deleteUserIngredient(token, id);
+      console.log(response);
+      if (response == "Deleted") {
+        loadUserIngredients();
+      }
+    } else {
+      console.error("token error");
+    }
+  }
 
   const handleIngredientSelect = () => {
     // Navigate to recipe_details and pass the recipe ID as a parameter
     router.push({pathname: "../add_ingredients"});
   };
 
-  // Function to increase item quantity
-  const increaseQuantity = (category: Category, itemId: string) => {
-    setData((prevData) => ({
-      ...prevData,
-      [category]: prevData[category].map((item) =>
-        item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
-      ),
-    }));
-  };
-
-  // Function to decrease item quantity
-  const decreaseQuantity = (category: Category, itemId: string) => {
-    setData((prevData) => ({
-      ...prevData,
-      [category]: prevData[category].map((item) =>
-        item.id === itemId && item.quantity > 0
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      ),
-    }));
-  };
-
-  const renderCategoryTab = (category: Category) => (
-    <TouchableOpacity
-      key={category}
-      style={[styles.categoryTab, selectedCategory === category && styles.activeTab]}
-      onPress={() => setSelectedCategory(category)}>
-      <Text style={[styles.categoryText, selectedCategory === category && styles.activeCategoryText]}>
-        {category}
-      </Text>
-    </TouchableOpacity>
-  );
-
-  const renderItem = ({ item }: { item: Item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemName}>{item.name}</Text>
-
-      {/* Quantity and Controls */}
-      <View style={styles.quantityControls}>
-        <Text style={styles.itemQuantity}>
-          {item.quantity} {item.unit} {/* Display quantity and unit */}
-        </Text>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => increaseQuantity(selectedCategory, item.id)}>
-          <Text style={styles.iconText}>+</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => decreaseQuantity(selectedCategory, item.id)}>
-          <Text style={styles.iconText}>-</Text>
-        </TouchableOpacity>
-      </View>
+  const renderIngredientItem = ({ item }: {item: IngredientItem}) => (
+    <TouchableOpacity 
+      style={styles.basicContainer}
+    >
+      <Text style={styles.title}>{item.name}</Text>
       
-    </View>    
-  );
+      <TouchableOpacity style={styles.addButton} onPress={() => {handleDelete(item.id)}}>
+        <Text style={styles.addButtonText}>X</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  );  
 
   return (
     
     
     <View style={styles.container}>
-
-      <Text style = {styles.fridgeText}>FRIDGE</Text>
-      <TouchableOpacity style={styles.addButton} onPress={() => {handleIngredientSelect()}}>
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
-      {/* Category Tabs */}
-      <View style={styles.tabsContainer}>
-        {categories.map((category) => renderCategoryTab(category))}
+      <View style={styles.subTitleContainer}>
+        <Text style = {styles.fridgeText}>FRIDGE</Text>
+        <TouchableOpacity style={styles.addButton} onPress={() => {handleIngredientSelect()}}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Items List */}
-      <FlatList
-        data={data[selectedCategory]} // Dynamically load items based on selected category
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        value={searchText}
+        onChangeText={handleSearch}
       />
       
+      <FlatList
+        data = {ingredients}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderIngredientItem}
+        horizontal={false}
+        numColumns={1}
+      />
     </View>
     
   );
@@ -228,8 +178,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   addButton: {
-    top: -10,
-    left: 1150,
     width: 50,               // Width of the circle
     height: 50,              // Height of the circle
     borderRadius: 25,        // Half of the width/height to make it circular
@@ -248,9 +196,61 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  fridgeText: {
-    top: 30, 
+  fridgeText: { 
     fontWeight: 'bold',
     fontSize: 40,
-  }
+  },
+  subTitleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+    fontSize: 24,
+    padding: 20,
+  },
+  backContainer: {
+    backgroundColor: '#D7EBD5',  // Green background color
+    justifyContent: 'center', // Center the text inside
+    alignItems: 'center',    // Center the text inside
+    elevation: 5,            // Optional: shadow for Android
+    shadowColor: '#000',     // Optional: shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
+    shadowOpacity: 0.3,      // Optional: shadow for iOS
+    shadowRadius: 3,         // Optional: shadow for iOS
+    paddingVertical: 12,     // Increased vertical padding
+    paddingHorizontal: 20,   // Increased horizontal padding
+    borderRadius: 8,         // Rounded corners
+    minWidth: 120,           // Ensure the button has a minimum width
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  basicContainer: {
+    flexDirection: 'row',         // Name and activity in a row
+    alignItems: 'center',         // Align them vertically centered
+    justifyContent: 'space-between', // Ensure they are spaced correctly
+    padding: 16,
+    backgroundColor: '#D7EBD5',
+    borderRadius: 8,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  searchBar: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    margin: 10,
+  },
 });

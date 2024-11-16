@@ -1,3 +1,4 @@
+// api/recipeService.ts
 import apiClient from './apiClient';
 
 
@@ -22,24 +23,25 @@ apiClient.interceptors.response.use(
 );
 
 
-export async function add_ingredient(xref_id: string, token: string): Promise<boolean> {
-  try {
-    const response = await fetch("http://localhost:8080/api/add_ingredient/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({ xref_id, token }).toString(),
-    });
 
-    if (response.ok) {
-      return true;
-    } else {
-      console.error("Login failed:", await response.text());
-      return false;
-    }
+export const fetchIngredient = async () => {
+  try {
+    const response = await apiClient.get('/ingredients/list');
+    console.log(response.data)
+    return response.data;
   } catch (error) {
-    console.error("Error during login:", error);
-    return false;
+    console.error('Error fetching ingredients:', error);
+    throw error;
   }
-}
+};
+
+export const searchIngredientName = async (query: string) => {
+  try {
+    const response = await apiClient.get(`/ingredients/search_name?name=${query}`);
+    console.log(response.data)
+    return response.data;
+  } catch (error) {
+    console.error('Error searching recipes:', error);
+    throw error;
+  }
+};

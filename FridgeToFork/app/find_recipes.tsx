@@ -9,6 +9,7 @@ import { useRouter } from 'expo-router';
 interface RecipeItem {
   id: number;
   name: string;
+  minutes: number;
   instructions: string[];
   ingredients: string[];
 };
