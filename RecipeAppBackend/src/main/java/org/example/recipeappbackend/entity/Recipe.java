@@ -8,12 +8,14 @@ import java.util.List;
 public class Recipe {
     private long id;
     private String name;
+    private long minutes;
     private List<String> instructions;
     private List<String> ingredients;
 
-    public Recipe(int id, String name, String instructions, String ingredients) {
+    public Recipe(int id, String name, int minutes, String instructions, String ingredients) {
         this.id = id;
         this.name = name;
+        this.minutes = minutes;
         this.instructions = parseJson(instructions);
         this.ingredients = parseJson(ingredients);
     }
@@ -24,6 +26,7 @@ public class Recipe {
     public String getName() {
         return name;
     }
+    public long getMinutes() {return minutes;}
     public List<String> getIngredients() {
         return ingredients;
     }
@@ -37,6 +40,7 @@ public class Recipe {
     public void setName(String name) {
         this.name = name;
     }
+    public void setMinutes(long minutes) {this.minutes = minutes;}
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }

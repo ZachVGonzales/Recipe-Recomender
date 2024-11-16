@@ -2,17 +2,25 @@ package org.example.recipeappbackend.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 
 @Service
 public class UserRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     // Hash credentials to create a unique identifier for each user
     public String getUserHash(String username, String password) throws NoSuchAlgorithmException {
@@ -61,6 +69,34 @@ public class UserRepository {
                 jdbcTemplate.update(insertQuery, type, xref_id);
                 return true;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public List<Ingredient> listIngredients(String token) {
+        String query = "SELECT xref_id FROM user_" + token + " WHERE row_type = 0 LIMIT 100";
+        List<Integer> xref_ids = jdbcTemplate.queryForList(query, Integer.class);
+        if (xref_ids.isEmpty()) {
+            return List.of();
+        }
+
+        query = "SELECT id, name FROM ingredients WHERE id IN (:xref_ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("xref_ids", xref_ids);
+
+        return namedParameterJdbcTemplate.query(query, parameters,
+                (rs, rowNum) -> new Ingredient(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                ));
+    }
+
+    public boolean deleteIngredient(String token, int id) {
+        if (userTableExists(token)) {
+            String deleteQuery = "DELETE FROM user_" + token + " WHERE row_type = 0 AND xref_id = " + id;
+            jdbcTemplate.update(deleteQuery);
+            return true;
         } else {
             return false;
         }

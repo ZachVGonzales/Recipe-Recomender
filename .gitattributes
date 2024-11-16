@@ -1,8 +1,0 @@
-RecipeAppBackend/database/recipe.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text
-RecipeAppBackend/database/recipe_V2.db filter=lfs diff=lfs merge=lfs -text

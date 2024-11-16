@@ -20,14 +20,7 @@ public class IngredientSearchController {
         System.out.println(searchedIngredients);
         return searchedIngredients;
     }
-/*
-    @GetMapping("/search_ingredients")
-    public List<Recipe> searchRecipesIngredients(@RequestParam String ingredients) {
-        List<Recipe> searchedRecipes = recipeRepository.searchRecipes(ingredients);
-        System.out.println(searchedRecipes);
-        return searchedRecipes;
-    }
-*/
+
     @GetMapping("/list")
     public List<Ingredient> listIngredients() {
         List<Ingredient> searchedIngredients = IngredientRepository.listIngredients();
