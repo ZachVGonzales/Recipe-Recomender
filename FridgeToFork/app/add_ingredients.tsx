@@ -6,8 +6,6 @@ import { useRouter } from 'expo-router';
 interface IngredientItem {
   id: string;
   name: string;
-  description: string;
-  nutrition: string;
 }
 
 export default function IngredientScreen() {

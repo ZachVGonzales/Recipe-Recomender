@@ -35,6 +35,16 @@ const RecipeDetailScreen = () => {
     if (id) fetchRecipe();
   }, [id]);
 
+  const handleCooked = async (recipe: RecipeItem) => {
+    console.log("handle recipe id:" + recipe.id)
+    router.push({
+      pathname: './cooked',
+      params: {
+        recipeId: recipe.id
+      },
+    });
+  }
+
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
@@ -66,6 +76,9 @@ const RecipeDetailScreen = () => {
           <Text key={index}>{index + 1}. {step}</Text>
         ))}
       </View>
+      <TouchableOpacity style={styles.addButton} onPress={() => handleCooked(recipe)}>
+      <Text style={styles.sectionTitle}>COOKED</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -139,6 +152,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     padding: 20
+  },
+  addButton: {
+    borderRadius: 25,        // Half of the width/height to make it circular
+    backgroundColor: '#8ccc72',  // Green background color
+    justifyContent: 'center', // Center the text inside
+    alignItems: 'center',    // Center the text inside
+    elevation: 5,            // Optional: shadow for Android
+    shadowColor: '#000',     // Optional: shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
+    shadowOpacity: 0.3,      // Optional: shadow for iOS
+    shadowRadius: 3,         // Optional: shadow for iOS
   },
 });
 
