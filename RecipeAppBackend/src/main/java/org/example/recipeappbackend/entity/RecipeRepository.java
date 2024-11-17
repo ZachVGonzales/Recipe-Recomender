@@ -1,5 +1,7 @@
 package org.example.recipeappbackend.entity;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -54,6 +56,21 @@ public class RecipeRepository {
                         rs.getString("instructions"),
                         rs.getString("ingredient_names")
                 ));
+    }
+
+    public List<Integer> getIngredientIds(Integer id) {
+        String sql = "SELECT ingredient_ids FROM recipes WHERE id = ?";
+
+        // Fetch the ingredient_ids json list as a string
+        String jsonIds = jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
+
+        // Try parsing the json into List<Integer> fail otherwise
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(jsonIds, new TypeReference<List<Integer>>() {});
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse ingr_ids Json", e);
+        }
     }
 
     public List<Recipe> generateRecipes(String token) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/user_ingredients")
-public class editSavedIngredientsController {
+public class EditSavedIngredientsController {
 
     @Autowired
     private UserRepository UserRepository;
