@@ -53,4 +53,3 @@ export async function listUserIngredients(token: string) {
     throw error;
   }
 } 
-

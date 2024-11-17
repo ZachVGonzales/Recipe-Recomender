@@ -1,8 +1,10 @@
 import React, { useState, useEffect  } from 'react';
 import { StyleSheet, View, Text, TextInput, Switch  } from 'react-native';
-import { fetchRecipes, searchRecipesName, searchRecipesIngredients } from '../api/recipeServiceAxios';
+import { fetchRecipes, searchRecipesName, searchRecipesIngredients, generateUserIngredientSearch } from '@/api/recipeServiceAxios';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
+import { getToken } from '@/api/tokenUtils';
+import { Bar } from 'react-native-progress';
 
 
 // Type for items within each category
@@ -12,6 +14,7 @@ interface RecipeItem {
   minutes: number;
   instructions: string[];
   ingredients: string[];
+  ratio: number;
 };
 
 
@@ -49,18 +52,33 @@ export default function RecipeScreen() {
     }
   };
 
+  const handleGenerateSearch = async () => {
+    const token = await getToken();
+    if (token) {
+      const data = await generateUserIngredientSearch(token);
+      setRecipes(data);
+    } else {
+      console.error("failed fetching token");
+    }
+  }
+
   const handleRecipeSelect = (recipe: RecipeItem) => {
     // Navigate to recipe_details and pass the recipe ID as a parameter
+    console.log(recipe.ratio);
     router.push({pathname: "./recipe_details", params: {id: recipe.id}});
   };
-
+  
 
   const renderRecipeItem = ({ item }: {item: RecipeItem}) => (
-    <TouchableOpacity 
-      style={styles.basicContainer}
-      onPress={() => handleRecipeSelect(item)} // Navigate on press
-    >
+    <TouchableOpacity style={styles.basicContainer} onPress={() => handleRecipeSelect(item)}>
       <Text style={styles.title}>{item.name}</Text>
+      <Bar 
+        progress={item.ratio}
+        color='forestgreen'
+        unfilledColor='lightgray'
+        borderRadius={5}
+        style={styles.progressBar}
+      />
     </TouchableOpacity>
   );
 
@@ -69,6 +87,11 @@ export default function RecipeScreen() {
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
       <View style={styles.subTitleContainer}>
         <Text>Use Alternate Search</Text>
+
+        <TouchableOpacity style={styles.addButton} onPress={() => handleGenerateSearch()}>
+          <Text>Generate Search</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
@@ -163,5 +186,24 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 18,
+  },
+  addButton: {
+    borderRadius: 25,        // Half of the width/height to make it circular
+    backgroundColor: '#8ccc72',  // Green background color
+    justifyContent: 'center', // Center the text inside
+    alignItems: 'center',    // Center the text inside
+    elevation: 5,            // Optional: shadow for Android
+    shadowColor: '#000',     // Optional: shadow for iOS
+    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
+    shadowOpacity: 0.3,      // Optional: shadow for iOS
+    shadowRadius: 3,         // Optional: shadow for iOS
+  },
+  addButtonText: {
+    fontSize: 24,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  progressBar: {
+    alignSelf: 'flex-end',
   },
 });

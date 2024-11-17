@@ -55,3 +55,19 @@ export const searchRecipesIngredients = async (query: string) => {
     throw error;
   }
 };
+
+export async function generateUserIngredientSearch(token: string) {
+  try {
+    const response = await apiClient.get('/recipes/generateUserIngredientSearch', {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      params: { token },
+    });
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching generated recipe result', error);
+    throw error;
+  }
+}
