@@ -3,7 +3,6 @@ package org.example.recipeappbackend.controller;
 import org.example.recipeappbackend.entity.Recipe;
 import org.example.recipeappbackend.entity.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,5 +40,12 @@ public class RecipeSearchController {
         Recipe recipe = recipeRepository.getRecipeByID(id);
         System.out.println(recipe);
         return recipe;
+    }
+
+    @GetMapping("/generateUserIngredientSearch")
+    public List<Recipe> generateUserIngredientSearch(@RequestParam String token) {
+        List<Recipe> generatedRecipes = recipeRepository.generateRecipes(token);
+        System.out.println(generatedRecipes);
+        return generatedRecipes;
     }
 }
