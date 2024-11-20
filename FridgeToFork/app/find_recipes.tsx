@@ -86,7 +86,7 @@ export default function RecipeScreen() {
     <View style={styles.scrollContainer}>
       <Text style={styles.containerTitle}>Fridge To Fork</Text>
       <View style={styles.subTitleContainer}>
-        <Text>Use Alternate Search</Text>
+        
 
         <TouchableOpacity style={styles.addButton} onPress={() => handleGenerateSearch()}>
           <Text>Generate Search</Text>
@@ -97,10 +97,7 @@ export default function RecipeScreen() {
         </TouchableOpacity>
       </View>
       
-        <Switch
-          value={useAlternateSearch}
-          onValueChange={setUseAlternateSearch}
-        />
+        
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
