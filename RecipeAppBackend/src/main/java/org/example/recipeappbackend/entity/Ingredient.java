@@ -33,14 +33,4 @@ public class Ingredient {
         return String.format("id: %d, name: %s", id, name);
     }
 
-    private List<String> parseJson(String ingredientsJson) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(ingredientsJson, new TypeReference<List<String>>() {});
-        } catch (Exception e) {
-            e.printStackTrace();
-            return List.of("hello"); // Return an empty list if parsing fails
-        }
-    }
-
 }
