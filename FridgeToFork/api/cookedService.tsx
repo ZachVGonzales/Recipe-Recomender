@@ -38,3 +38,25 @@ export const getIngredientsByRecipeId = async (id: number) => {
     throw error;
   }
 }
+
+export async function add_recipe(xref_id: string, token: string): Promise<boolean> {
+  try {
+    const response = await fetch("http://localhost:8080/api/cooked/addRecipe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({ xref_id, token }).toString(),
+    });
+
+    if (response.ok) {
+      return true;
+    } else {
+      console.error("Login failed:", await response.text());
+      return false;
+    }
+  } catch (error) {
+    console.error("Error during login:", error);
+    return false;
+  }
+}

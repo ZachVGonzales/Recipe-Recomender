@@ -112,4 +112,25 @@ public class UserRepository {
             return false;
         }
     }
+
+    public List<Recipe> listRecipes(String token) {
+        String query = "SELECT xref_id FROM user_" + token + " WHERE row_type = 1 LIMIT 100";
+        List<Integer> xref_ids = jdbcTemplate.queryForList(query, Integer.class);
+        if (xref_ids.isEmpty()) {
+            return List.of();
+        }
+
+        query = "SELECT id, name, minutes, instructions, ingredient_names FROM recipes WHERE id IN (:xref_ids)";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("xref_ids", xref_ids);
+
+        return namedParameterJdbcTemplate.query(query, parameters,
+                (rs, rowNum) -> new Recipe(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("minutes"),
+                        rs.getString("instructions"),
+                        rs.getString("ingredient_names")
+                ));
+    }
 }

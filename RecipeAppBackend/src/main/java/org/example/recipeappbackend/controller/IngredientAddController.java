@@ -23,4 +23,6 @@ public class IngredientAddController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ingredient not added");
         }
     }
+
+
 }

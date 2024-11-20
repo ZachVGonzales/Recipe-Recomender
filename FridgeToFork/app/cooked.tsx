@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { getIngredientsByRecipeId } from '@/api/cookedService'
+import { getIngredientsByRecipeId , add_recipe } from '@/api/cookedService'
 import { getToken } from '@/api/tokenUtils';
 import { deleteUserIngredient } from '@/api/userIngredientService';
+import Recipe from '@/components/Recipe';
 
 
 interface IngredientItem {
@@ -58,12 +59,30 @@ const DetailsScreen = () => {
     </View>
   );
 
+  const handleAddSelect = async (recipe_id: string) => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const added = await add_recipe(recipe_id, token);
+        if (added) {
+          console.log("add Recipe successful!");
+          router.push({pathname: "/find_recipes"})
+        }
+      } else {
+        console.error("token error")
+      }
+    } catch (error) {
+      console.error("Error adding Recipe", error);
+    }
+    console.log("add Recipe unsuccessful");
+  };
+
 
   return (
     <View style={styles.scrollContainer}>
       <View style={styles.subTitleContainer}>
         <Text style={styles.headerText}>Remove Ingredients Used Up!</Text>
-        <TouchableOpacity style={styles.backContainer} onPress={() => router.push({pathname: "/find_recipes"})}>
+        <TouchableOpacity style={styles.backContainer} onPress={() => handleAddSelect(String(recipeId))}>
           <Text style={styles.backButtonText}>DONE ✓</Text>
         </TouchableOpacity>
       </View>
