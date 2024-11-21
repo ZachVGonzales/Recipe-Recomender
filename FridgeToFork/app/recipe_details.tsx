@@ -1,7 +1,6 @@
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity  } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
-
 
 interface RecipeItem {
   id: number;
@@ -11,8 +10,6 @@ interface RecipeItem {
   instructions: string[];
   ingredients: string[];
 }
-
-
 
 const RecipeDetailScreen = () => {
   const { id } = useLocalSearchParams();
@@ -36,14 +33,13 @@ const RecipeDetailScreen = () => {
   }, [id]);
 
   const handleCooked = async (recipe: RecipeItem) => {
-    console.log("handle recipe id:" + recipe.id)
     router.push({
       pathname: './cooked',
       params: {
-        recipeId: recipe.id
+        recipeId: recipe.id,
       },
     });
-  }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
@@ -54,116 +50,137 @@ const RecipeDetailScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Back Button */}
       <View style={styles.backButtonContainer}>
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/find_recipes')}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Recipe Name */}
       <View style={styles.nameContainer}>
-        <Text style={styles.title}>Name: {recipe.name}</Text>
-        <Text>Time: {recipe.minutes} minutes</Text>
+        <Text style={styles.title}>{recipe.name.toUpperCase()}</Text>
+        <Text style={styles.time}>Time: {recipe.minutes} minutes</Text>
       </View>
+
+      {/* Ingredients Section */}
       <View style={styles.basicContainer}>
-        <Text style={styles.sectionTitle}>Ingredients:</Text>
+        <Text style={styles.sectionTitle}>INGREDIENTS</Text>
         {recipe.ingredients.map((ingredient, index) => (
-          <Text key={index}>- {ingredient}</Text>
+          <Text key={index} style={styles.text}>- {ingredient}</Text>
         ))}
       </View>
+
+      {/* Instructions Section */}
       <View style={styles.basicContainer}>
-        <Text style={styles.sectionTitle}>Instructions:</Text>
+        <Text style={styles.sectionTitle}>INSTRUCTIONS</Text>
         {recipe.instructions.map((step, index) => (
-          <Text key={index}>{index + 1}. {step}</Text>
+          <Text key={index} style={styles.text}>
+            {index + 1}. {step}
+          </Text>
         ))}
       </View>
+
+      {/* Cooked Button */}
       <TouchableOpacity style={styles.addButton} onPress={() => handleCooked(recipe)}>
-      <Text style={styles.sectionTitle}>COOKED</Text>
+        <Text style={styles.cookedButtonText}>COOKED</Text>
       </TouchableOpacity>
     </ScrollView>
   );
-}
-
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1, // Ensure the content stretches to fill the space
+    backgroundColor: '#FFFDE7', // Light cream color
     padding: 16,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 15,
-    marginBottom: 5,
-  },
-  basicContainer: {
-    flexDirection: 'column',         // Name and activity in a row
-    alignItems: 'flex-start',         // Align them vertically centered
-    justifyContent: 'space-between', // Ensure they are spaced correctly
-    padding: 16,
-    backgroundColor: '#D7EBD5',
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  nameContainer: {
-    flexDirection: 'column',         // Name and activity in a row
-    alignItems: 'center',         // Align them vertically centered
-    justifyContent: 'space-between', // Ensure they are spaced correctly
-    padding: 16,
-    backgroundColor: '#D7EBD5',
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
-    paddingVertical: 12,     // Increased vertical padding
-    paddingHorizontal: 20,   // Increased horizontal padding
-    borderRadius: 8,         // Rounded corners
-    minWidth: 120,           // Ensure the button has a minimum width
-  },
-  backButtonText: {
-    fontSize: 18,
-    color: '#000',
-    fontWeight: 'bold',
   },
   backButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    padding: 20
+    justifyContent: 'flex-start',
+    marginBottom: 20,
+  },
+  backContainer: {
+    backgroundColor: '#2E7D32', // Dark green
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  nameContainer: {
+    alignItems: 'center',
+    backgroundColor: '#A5D6A7', // Light green
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    textAlign: 'center',
+  },
+  time: {
+    fontSize: 16,
+    color: '#555',
+    marginTop: 10,
+  },
+  basicContainer: {
+    padding: 16,
+    backgroundColor: '#A5D6A7', // Light green
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#2E7D32',
+  },
+  text: {
+    fontSize: 16,
+    color: '#333',
+    marginBottom: 5,
   },
   addButton: {
-    borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
+    alignSelf: 'center',
+    backgroundColor: '#2E7D32', // Dark green
+    paddingVertical: 14,
+    paddingHorizontal: 60,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+    bottom: 5,
+  },
+  cookedButtonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
 });
 
-export default RecipeDetailScreen; // Ensure you have this line
+export default RecipeDetailScreen;

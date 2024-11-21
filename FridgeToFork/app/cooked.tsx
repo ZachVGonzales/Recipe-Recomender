@@ -52,7 +52,7 @@ const DetailsScreen = () => {
 
   const renderIngredientItem = ({ item }: { item: IngredientItem }) => (
     <View style={styles.basicContainer}>
-      <Text style={styles.title}>{item.name}</Text>
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
       <TouchableOpacity style={styles.addButton} onPress={() => {handleDelete(item.id)}}>
         <Text style={styles.addButtonText}>X</Text>
       </TouchableOpacity>
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
   },
   title: {
     fontSize: 24,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',         // Align them vertically centered
     justifyContent: 'space-between', // Ensure they are spaced correctly
     padding: 16,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
   },
   containerTitle: {
     fontSize: 60,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 18,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   searchBar: {
@@ -168,8 +168,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   addButton: {
+    width: 50,
+    height: 50,
     borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android

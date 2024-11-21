@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet , TextInput} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { useRouter } from 'expo-router';
-import { listUserIngredients, deleteUserIngredient } from '../api/userIngredientService'
-import { getToken } from '../api/tokenUtils'
-
+import { listUserIngredients, deleteUserIngredient } from '../api/userIngredientService';
+import { getToken } from '../api/tokenUtils';
 
 interface IngredientItem {
   id: number;
   name: string;
 }
-
 
 export default function FridgeScreen() {
   const [searchText, setSearchText] = useState('');
@@ -23,7 +21,7 @@ export default function FridgeScreen() {
         const data = await listUserIngredients(token);
         setIngredients(data);
       } else {
-        console.error("token error")
+        console.error('Token error');
       }
     } catch (error) {
       console.error('Failed to load user ingredients:', error);
@@ -31,7 +29,6 @@ export default function FridgeScreen() {
   };
 
   useEffect(() => {
-    // Load initial list of ingredients
     loadUserIngredients();
   }, []);
 
@@ -40,59 +37,50 @@ export default function FridgeScreen() {
     const token = await getToken();
     if (token) {
       if (text === '') {
-        // Reset to full list when search bar is cleared
         const data = await listUserIngredients(token);
         setIngredients(data);
       } else {
-        // TODO: implement search functionality here
-        console.log("search here...");
+        console.log('Search functionality to be implemented...');
       }
     } else {
-      console.error("token error");
+      console.error('Token error');
     }
-  }
+  };
 
   const handleDelete = async (id: number) => {
     const token = await getToken();
     if (token) {
       const response = await deleteUserIngredient(token, id);
-      console.log(response);
-      if (response == "Deleted") {
+      if (response === 'Deleted') {
         loadUserIngredients();
       }
     } else {
-      console.error("token error");
+      console.error('Token error');
     }
-  }
-
-  const handleIngredientSelect = () => {
-    // Navigate to recipe_details and pass the recipe ID as a parameter
-    router.push({pathname: "../add_ingredients"});
   };
 
-  const renderIngredientItem = ({ item }: {item: IngredientItem}) => (
-    <TouchableOpacity 
-      style={styles.basicContainer}
-    >
-      <Text style={styles.title}>{item.name}</Text>
-      
-      <TouchableOpacity style={styles.addButton} onPress={() => {handleDelete(item.id)}}>
+  const handleIngredientSelect = () => {
+    router.push({ pathname: '../add_ingredients' });
+  };
+
+  const renderIngredientItem = ({ item }: { item: IngredientItem }) => (
+    <TouchableOpacity style={styles.basicContainer}>
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
+      <TouchableOpacity style={styles.removeButton} onPress={() => handleDelete(item.id)}>
         <Text style={styles.addButtonText}>X</Text>
       </TouchableOpacity>
     </TouchableOpacity>
-  );  
+  );
 
   return (
-    
-    
     <View style={styles.container}>
+            <Text style={styles.containerTitle}>Fridge</Text>
       <View style={styles.subTitleContainer}>
-        <Text style = {styles.fridgeText}>FRIDGE</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => {handleIngredientSelect()}}>
-          <Text style={styles.addButtonText}>+</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
           <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addButton} onPress={handleIngredientSelect}>
+          <Text style={styles.addButtonText}>Add Ingredient</Text>
         </TouchableOpacity>
       </View>
 
@@ -102,136 +90,111 @@ export default function FridgeScreen() {
         value={searchText}
         onChangeText={handleSearch}
       />
-      
+
       <FlatList
-        data = {ingredients}
-        keyExtractor={item => item.id.toString()}
+        data={ingredients}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderIngredientItem}
         horizontal={false}
         numColumns={1}
       />
     </View>
-    
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: 80,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFFDE7',
     paddingHorizontal: 20,
   },
-  tabsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: '#f8f8f8',
+
+  containerTitle: {
+    paddingTop: 20,
+    fontSize: 70,
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'sans-serif-condensed',
+    fontStyle: 'italic',
+    color: '#2E7D32',
   },
-  categoryTab: {
-    padding: 10,
-    borderRadius: 20,
-  },
-  activeTab: {
-    backgroundColor: '#8ccc72',
-  },
-  categoryText: {
-    fontSize: 16,
-    color: '#808080',
-  },
-  activeCategoryText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  listContainer: {
-    padding: 20,
-  },
-  itemContainer: {
+
+
+  subTitleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 5,
+    padding: 10,
+  },
+  backContainer: {
+    backgroundColor: '#2E7D32',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
     paddingVertical: 10,
-    borderBottomColor: '#d8d8d8',
-    borderBottomWidth: 1,
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    minWidth: 120,
   },
-  itemName: {
+  backButtonText: {
     fontSize: 18,
-    color: '#333',
-  },
-  quantityControls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconButton: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 50,
-    padding: 5,
-    marginHorizontal: 5,
-  },
-  iconText: {
-    fontSize: 18,
-    color: '#333',
-  },
-  itemQuantity: {
-    fontSize: 16,
-    color: '#333',
-    marginHorizontal: 10,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
   },
   addButton: {
-    width: 50,               // Width of the circle
-    height: 50,              // Height of the circle
-    borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
+    width: 200,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#2E7D32',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
   },
+
+  removeButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#2E7D32',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
+
+
   addButtonText: {
     fontSize: 24,
     color: '#fff',
     fontWeight: 'bold',
   },
-
-  fridgeText: { 
-    fontWeight: 'bold',
-    fontSize: 40,
-  },
-  subTitleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-    fontSize: 24,
-    padding: 20,
-  },
-  backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
-    paddingVertical: 12,     // Increased vertical padding
-    paddingHorizontal: 20,   // Increased horizontal padding
-    borderRadius: 8,         // Rounded corners
-    minWidth: 120,           // Ensure the button has a minimum width
-  },
-  backButtonText: {
-    fontSize: 18,
-    color: '#000',
-    fontWeight: 'bold',
+  searchBar: {
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    fontSize: 16,
+    color: '#333',
   },
   basicContainer: {
-    flexDirection: 'row',         // Name and activity in a row
-    alignItems: 'center',         // Align them vertically centered
-    justifyContent: 'space-between', // Ensure they are spaced correctly
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 16,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
@@ -243,14 +206,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
     fontSize: 18,
-  },
-  searchBar: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    margin: 10,
+    color: '#333',
   },
 });
+

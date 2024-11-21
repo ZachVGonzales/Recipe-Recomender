@@ -45,14 +45,14 @@ export default function IngredientScreen() {
       style={styles.basicContainer}
       onPress={() => handleIngredientSelect(item)}
     >
-      <Text style={styles.title}>{item.name}</Text>
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.scrollContainer}>
       <View style={styles.subTitleContainer}>
-        <Text style={styles.headerText}>Choose your Ingredient</Text>
+        <Text style={styles.headerText}>CHOOSE INGREDIENT</Text>
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push({pathname: "/fridge"})}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
   },
   containerTitle: {
     fontSize: 60,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     top: -10,
-    left: 1000,
+    left: 500,
     width: 200,               // Width of the circle
     height: 50,              // Height of the circle
     borderRadius: 25,        // Half of the width/height to make it circular
@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   headerText: {
-    fontSize: 20,
+    top: 10,
+    fontSize: 40,
     color: '#00',
     fontWeight: 'bold'
   },
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 18,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
 });

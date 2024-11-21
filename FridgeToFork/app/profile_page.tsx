@@ -62,7 +62,7 @@ export default function FridgeScreen() {
 
   const renderRecipeItem = ({ item }: {item: RecipeItem}) => (
     <TouchableOpacity style={styles.basicContainer} onPress={() => handleRecipeSelect(item)}>
-      <Text style={styles.title}>{item.name}</Text>
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
     </TouchableOpacity>
   );  
 
@@ -70,6 +70,8 @@ export default function FridgeScreen() {
     
     
     <View style={styles.container}>
+                  <Text style={styles.containerTitle}>Profile</Text>
+
       <View style={styles.subTitleContainer}>
         <Text style = {styles.fridgeText}>Past Recipes</Text>
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
@@ -93,15 +95,25 @@ export default function FridgeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: 80,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFFDE7',
     paddingHorizontal: 20,
   },
+
+  containerTitle: {
+    paddingTop: 30,
+    fontSize: 70,
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'sans-serif-condensed',
+    fontStyle: 'italic',
+    color: '#2E7D32',
+  },
+
   tabsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#2E7D32',
   },
   categoryTab: {
     padding: 10,
@@ -111,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8ccc72',
   },
   categoryText: {
-    fontSize: 16,
+    fontSize: 10,
     color: '#808080',
   },
   activeCategoryText: {
@@ -138,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconButton: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#2E7D32',
     borderRadius: 50,
     padding: 5,
     marginHorizontal: 5,
@@ -156,7 +168,7 @@ const styles = StyleSheet.create({
     width: 50,               // Width of the circle
     height: 50,              // Height of the circle
     borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
@@ -171,9 +183,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  fridgeText: { 
+  fridgeText: {
+    top: 20,
     fontWeight: 'bold',
-    fontSize: 40,
+    fontSize: 30,
   },
   subTitleContainer: {
     flexDirection: 'row',
@@ -183,7 +196,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
@@ -198,7 +211,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 18,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   basicContainer: {
@@ -206,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',         // Align them vertically centered
     justifyContent: 'space-between', // Ensure they are spaced correctly
     padding: 16,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',

@@ -1,11 +1,10 @@
-import React, { useState, useEffect  } from 'react';
-import { StyleSheet, View, Text, TextInput, Switch  } from 'react-native';
-import { fetchRecipes, searchRecipesName, searchRecipesIngredients, generateUserIngredientSearch } from '@/api/recipeServiceAxios';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
+import { fetchRecipes, searchRecipesName, generateUserIngredientSearch } from '@/api/recipeServiceAxios';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 import { getToken } from '@/api/tokenUtils';
 import { Bar } from 'react-native-progress';
-
 
 // Type for items within each category
 interface RecipeItem {
@@ -15,13 +14,11 @@ interface RecipeItem {
   instructions: string[];
   ingredients: string[];
   ratio: number;
-};
-
+}
 
 export default function RecipeScreen() {
   const [searchText, setSearchText] = useState('');
   const [recipes, setRecipes] = useState([]);
-  const [useAlternateSearch, setUseAlternateSearch] = useState(false); // State for switch
   const router = useRouter();
 
   useEffect(() => {
@@ -37,7 +34,6 @@ export default function RecipeScreen() {
     loadRecipes();
   }, []);
 
-
   const handleSearch = async (text: string) => {
     setSearchText(text);
     if (text === '') {
@@ -45,9 +41,7 @@ export default function RecipeScreen() {
       const data = await fetchRecipes();
       setRecipes(data);
     } else {
-      const data = useAlternateSearch
-       ? await searchRecipesIngredients(text)
-       : await searchRecipesName(text)
+      const data = await searchRecipesName(text);
       setRecipes(data);
     }
   };
@@ -58,55 +52,52 @@ export default function RecipeScreen() {
       const data = await generateUserIngredientSearch(token);
       setRecipes(data);
     } else {
-      console.error("failed fetching token");
+      console.error('Failed fetching token');
     }
-  }
+  };
 
   const handleRecipeSelect = (recipe: RecipeItem) => {
     // Navigate to recipe_details and pass the recipe ID as a parameter
-    console.log(recipe.ratio);
-    router.push({pathname: "./recipe_details", params: {id: recipe.id}});
+    router.push({ pathname: './recipe_details', params: { id: recipe.id } });
   };
-  
 
-  const renderRecipeItem = ({ item }: {item: RecipeItem}) => (
+  const renderRecipeItem = ({ item }: { item: RecipeItem }) => (
     <TouchableOpacity style={styles.basicContainer} onPress={() => handleRecipeSelect(item)}>
-      <Text style={styles.title}>{item.name}</Text>
-      <Bar 
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
+      <Bar
         progress={item.ratio}
-        color='forestgreen'
-        unfilledColor='lightgray'
+        color="#2E7D32"
+        unfilledColor="lightgray"
         borderRadius={5}
         style={styles.progressBar}
+      
       />
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.scrollContainer}>
-      <Text style={styles.containerTitle}>Fridge To Fork</Text>
-      <View style={styles.subTitleContainer}>
-        
+      <Text style={styles.containerTitle}>Recipes</Text>
 
-        <TouchableOpacity style={styles.addButton} onPress={() => handleGenerateSearch()}>
-          <Text>Generate Search</Text>
-        </TouchableOpacity>
-
+      <View style={styles.headerContainer}>
         <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.generateButton} onPress={handleGenerateSearch}>
+          <Text style={styles.generateButtonText}>GENERATE RECIPES FROM FRIDGE</Text>
+        </TouchableOpacity>
       </View>
-      
-        
       <TextInput
         style={styles.searchBar}
-        placeholder="Search..."
+        placeholder="SEARCH..."
+        placeholderTextColor="#555"
         value={searchText}
         onChangeText={handleSearch}
       />
       <FlatList
-        data = {recipes}
-        keyExtractor={item => item.id.toString()}
+        data={recipes}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderRecipeItem}
         horizontal={false}
         numColumns={1}
@@ -115,36 +106,82 @@ export default function RecipeScreen() {
   );
 }
 
-
 const styles = StyleSheet.create({
   scrollContainer: {
-    flex: 1, // Ensures content stretches vertically
+    flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
-  },
-  scrollContent: {
-    padding: 20,
+    backgroundColor: '#FFFDE7',
   },
   containerTitle: {
-    fontSize: 60,
-    textAlign: 'center', // centers text
-    marginBottom: 40,
-    fontFamily: 'italiano',
-    fontStyle: 'italic'
+    fontSize: 48,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontFamily: 'sans-serif-condensed',
+    fontStyle: 'italic',
+    color: '#2E7D32',
   },
-  subTitleContainer: {
+  headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 5,
-    fontSize: 24
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  backContainer: {
+    backgroundColor: '#2E7D32',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  generateButton: {
+    backgroundColor: '#2E7D32',
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+    width: '100%',
+  },
+  generateButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    textAlign: 'center',
+  },
+  searchBar: {
+    height: 80,
+    borderColor: '#CCC',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 20,
+    
+    fontSize: 16,
+    color: '#333',
   },
   basicContainer: {
-    flexDirection: 'row',         // Name and activity in a row
-    alignItems: 'center',         // Align them vertically centered
-    justifyContent: 'space-between', // Ensure they are spaced correctly
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 16,
-    backgroundColor: '#D7EBD5',
-    borderRadius: 8,
+    backgroundColor: '#A5D6A7', // Slightly lighter cyan color
+    borderRadius: 12,
     marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -152,55 +189,14 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
-    paddingVertical: 12,     // Increased vertical padding
-    paddingHorizontal: 20,   // Increased horizontal padding
-    borderRadius: 8,         // Rounded corners
-    minWidth: 120,           // Ensure the button has a minimum width
-  },
-  backButtonText: {
-    fontSize: 18,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  searchBar: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    margin: 10,
-  },
   title: {
-    fontWeight: 'bold',
     fontSize: 18,
-  },
-  addButton: {
-    borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
-    justifyContent: 'center', // Center the text inside
-    alignItems: 'center',    // Center the text inside
-    elevation: 5,            // Optional: shadow for Android
-    shadowColor: '#000',     // Optional: shadow for iOS
-    shadowOffset: { width: 0, height: 2 }, // Optional: shadow for iOS
-    shadowOpacity: 0.3,      // Optional: shadow for iOS
-    shadowRadius: 3,         // Optional: shadow for iOS
-  },
-  addButtonText: {
-    fontSize: 24,
-    color: '#fff',
     fontWeight: 'bold',
+    color: '#000',
   },
   progressBar: {
+    bottom: 5,
     alignSelf: 'flex-end',
   },
 });
+
