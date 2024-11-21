@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthProvider, useAuth } from './AuthContext'; // Import AuthProvider and useAuth
+import { StatusBar } from 'expo-status-bar';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,7 +24,9 @@ export default function RootLayout() {
   }
 
   return (
+    
     <AuthProvider> {/* Wrap the whole app with AuthProvider */}
+      <StatusBar hidden = {true}/>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AuthWrapper /> {/* This is where we call useAuth() */}
       </ThemeProvider>
@@ -40,7 +43,11 @@ function AuthWrapper() {
   }
 
   return (
-    <Stack initialRouteName="index">
+    <Stack initialRouteName="index"
+    screenOptions={{
+      headerShown: false, // Disable header globally
+    }}
+    >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       {isAuthenticated && (
         <Stack.Screen name="home" options={{headerShown: false}} />

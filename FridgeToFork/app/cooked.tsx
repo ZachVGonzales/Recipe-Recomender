@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { getIngredientsByRecipeId } from '@/api/cookedService'
+import { getIngredientsByRecipeId , add_recipe } from '@/api/cookedService'
 import { getToken } from '@/api/tokenUtils';
 import { deleteUserIngredient } from '@/api/userIngredientService';
+import Recipe from '@/components/Recipe';
 
 
 interface IngredientItem {
@@ -51,19 +52,37 @@ const DetailsScreen = () => {
 
   const renderIngredientItem = ({ item }: { item: IngredientItem }) => (
     <View style={styles.basicContainer}>
-      <Text style={styles.title}>{item.name}</Text>
+      <Text style={styles.title}>{item.name.toUpperCase()}</Text>
       <TouchableOpacity style={styles.addButton} onPress={() => {handleDelete(item.id)}}>
         <Text style={styles.addButtonText}>X</Text>
       </TouchableOpacity>
     </View>
   );
 
+  const handleAddSelect = async (recipe_id: string) => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const added = await add_recipe(recipe_id, token);
+        if (added) {
+          console.log("add Recipe successful!");
+          router.push({pathname: "/find_recipes"})
+        }
+      } else {
+        console.error("token error")
+      }
+    } catch (error) {
+      console.error("Error adding Recipe", error);
+    }
+    console.log("add Recipe unsuccessful");
+  };
+
 
   return (
     <View style={styles.scrollContainer}>
       <View style={styles.subTitleContainer}>
         <Text style={styles.headerText}>Remove Ingredients Used Up!</Text>
-        <TouchableOpacity style={styles.backContainer} onPress={() => router.push({pathname: "/find_recipes"})}>
+        <TouchableOpacity style={styles.backContainer} onPress={() => handleAddSelect(String(recipeId))}>
           <Text style={styles.backButtonText}>DONE ✓</Text>
         </TouchableOpacity>
       </View>
@@ -84,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
   },
   title: {
     fontSize: 24,
@@ -99,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',         // Align them vertically centered
     justifyContent: 'space-between', // Ensure they are spaced correctly
     padding: 16,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     marginBottom: 10,
     shadowColor: '#000',
@@ -111,7 +130,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
   },
   containerTitle: {
     fontSize: 60,
@@ -121,7 +140,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   backContainer: {
-    backgroundColor: '#D7EBD5',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
@@ -136,7 +155,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: 18,
-    color: '#000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   searchBar: {
@@ -149,8 +168,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   addButton: {
+    width: 50,
+    height: 50,
     borderRadius: 25,        // Half of the width/height to make it circular
-    backgroundColor: '#8ccc72',  // Green background color
+    backgroundColor: '#2E7D32',  // Green background color
     justifyContent: 'center', // Center the text inside
     alignItems: 'center',    // Center the text inside
     elevation: 5,            // Optional: shadow for Android
