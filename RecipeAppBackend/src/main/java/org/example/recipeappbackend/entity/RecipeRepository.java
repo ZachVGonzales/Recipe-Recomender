@@ -3,6 +3,7 @@ package org.example.recipeappbackend.entity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,10 +18,10 @@ import java.util.stream.Collectors;
 public class RecipeRepository {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public List<Recipe> searchRecipes(String keyword) {
         String sql = "SELECT id, name, minutes, instructions, ingredient_names FROM recipes WHERE name LIKE ? LIMIT 100";
@@ -48,28 +49,31 @@ public class RecipeRepository {
 
     public Recipe getRecipeByID(Integer id) {
         String sql = "SELECT id, name, minutes, instructions, ingredient_names FROM recipes WHERE id = ? LIMIT 1";
-        return jdbcTemplate.queryForObject(sql, new Object[]{id},
-                (rs, rowNum) -> new Recipe(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getInt("minutes"),
-                        rs.getString("instructions"),
-                        rs.getString("ingredient_names")
-                ));
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{id},
+                    (rs, rowNum) -> new Recipe(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("minutes"),
+                            rs.getString("instructions"),
+                            rs.getString("ingredient_names")
+                    ));
+        } catch (EmptyResultDataAccessException e) {
+            return null; // Or handle as needed
+        }
     }
 
     public List<Integer> getIngredientIds(Integer id) {
         String sql = "SELECT ingredient_ids FROM recipes WHERE id = ?";
 
-        // Fetch the ingredient_ids json list as a string
-        String jsonIds = jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
-
         // Try parsing the json into List<Integer> fail otherwise
         try {
+            // Fetch the ingredient_ids json list as a string
+            String jsonIds = jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(jsonIds, new TypeReference<List<Integer>>() {});
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse ingr_ids Json", e);
+            return null;
         }
     }
 

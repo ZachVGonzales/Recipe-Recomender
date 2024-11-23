@@ -17,10 +17,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 public class UserRepository {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     // Hash credentials to create a unique identifier for each user
     public String getUserHash(String username, String password) throws NoSuchAlgorithmException {
