@@ -5,45 +5,33 @@ import { useRouter } from 'expo-router';
 import { useAuth } from './AuthContext';
 import { saveToken } from '../api/tokenUtils';
 
-
 export default function LoginScreen() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // State to display error messages
   const router = useRouter();
   const { applogin, setLoading } = useAuth();
-  
 
   const handleLogin = async () => {
-    const token = await login(username, password);
-    try {
-      if (token) {
-        await saveToken(token);
-        applogin();
-        setLoading(false)
-        router.push("./home");  // Navigate to Home
-        console.log("token saved securely:", token)
-      } else {
-        Alert.alert("Login failed", "Invalid credentials, please try again.");
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
+    if (!username || !password) {
+      setError('Please fill out all fields.'); // Display error for empty fields
+      return;
     }
-  };
 
-  const handleSignUp = async () => {
-    const token = await signup(username, password);
     try {
+      const token = await login(username, password);
       if (token) {
         await saveToken(token);
         applogin();
-        setLoading(false)
-        router.push("./home");  // Navigate to Home
-        console.log("token saved securely:", token)
+        setLoading(false);
+        router.push('./home'); // Navigate to Home
+        console.log('Token saved securely:', token);
       } else {
-        Alert.alert("Signup failed", "Invalid credentials, please try again.");
+        setError('Invalid username or password. Please try again.'); // Invalid credentials error
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error('Error during login:', error);
+      setError('An unexpected error occurred. Please try again later.');
     }
   };
 
@@ -52,12 +40,18 @@ export default function LoginScreen() {
       {/* Title */}
       <Text style={styles.title}>Fridge To Fork</Text>
 
+      {/* Error Message */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
       {/* Username Input */}
       <TextInput
         style={styles.input}
         placeholder="Username"
         value={username}
-        onChangeText={setUsername}
+        onChangeText={(text) => {
+          setError(''); // Clear error when user types
+          setUsername(text);
+        }}
         autoCapitalize="none"
       />
 
@@ -66,7 +60,10 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Password"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setError(''); // Clear error when user types
+          setPassword(text);
+        }}
         secureTextEntry
       />
 
@@ -76,7 +73,7 @@ export default function LoginScreen() {
       </TouchableOpacity>
 
       {/* Create New Account */}
-      <TouchableOpacity onPress={handleSignUp}>
+      <TouchableOpacity onPress={() => router.push('./createaccount')}>
         <Text style={styles.createAccount}>Create New Account</Text>
       </TouchableOpacity>
     </View>
@@ -87,16 +84,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFDE7',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    fontSize: 60,
+    fontSize: 80,
     textAlign: 'center',
     marginBottom: 40,
     fontFamily: 'italiano',
     fontStyle: 'italic',
+    color: '#000',
+  },
+  errorText: {
+    color: '#000', // Red error message
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   input: {
     width: '80%',
@@ -108,18 +112,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 16,
   },
-  forgotPassword: {
-    fontSize: 14,
-    color: '#666',
-    marginVertical: 10,
-    textDecorationLine: 'underline',
-    textAlign: 'right',
-    width: '80%',
-  },
   signInButton: {
     width: '80%',
     height: 50,
-    backgroundColor: '#D7EBD5',
+    backgroundColor: '#A5D6A7',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
@@ -132,7 +128,7 @@ const styles = StyleSheet.create({
   },
   signInButtonText: {
     fontSize: 18,
-    color: 'black',
+    color: '#2E7D32',
     fontWeight: 'bold',
   },
   createAccount: {
