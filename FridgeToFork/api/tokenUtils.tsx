@@ -29,3 +29,18 @@ export const getToken = async () => {
     return null;
   }
 };
+
+export const clearToken = async () => {
+  try {
+    if (Platform.OS === 'web') {
+      // Use AsyncStorage on web
+      await AsyncStorage.removeItem('userToken');
+    } else {
+      // Use SecureStore on iOS and Android
+      await SecureStore.deleteItemAsync('userToken');
+    }
+    console.log("Token cleared successfully");
+  } catch (error) {
+    console.error("Error clearing token:", error);
+  }
+};

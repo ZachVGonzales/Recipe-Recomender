@@ -1,9 +1,52 @@
-import React from 'react';
+
+
+import React, {useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { getToken, clearToken } from '../api/tokenUtils';
+import { getProfile} from '../api/profileService';
+
+
+
+
 
 const HomeScreen = () => {
   const router = useRouter();
+  const [profile, setProfile] = useState({});
+  const [name, setName] = useState('');
+
+
+
+  const getUserName = async () => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const profileData = await getProfile(token);
+
+        if (profileData && profileData.name) {
+          setName(profileData.name.trim());
+        }
+
+      } else {
+        console.error('Token error');
+      }
+    } catch (error) {
+      console.error('Failed to load user ingredients:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await clearToken(); // Clear the stored token
+      router.push('/'); // Navigate to the index page
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    getUserName();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -12,10 +55,10 @@ const HomeScreen = () => {
         {/* Profile Section */}
         <TouchableOpacity style={styles.profileContainer} onPress={() => router.push('/profile_page')}>
           <Image
-            source={{ uri: 'https://via.placeholder.com/100' }} // Replace with actual profile image URL
+            source={{uri: 'https://static.vecteezy.com/system/resources/previews/016/825/496/non_2x/fork-and-knife-icon-illustration-free-vector.jpg'}} // Replace with actual profile image URL
             style={styles.profileImage}
           />
-          <Text style={styles.profileName}>John Doe</Text> {/* Replace with dynamic name */}
+          <Text style={styles.profileName}>Welcome, <strong>{name}</strong></Text> {/* Replace with dynamic name */}
         </TouchableOpacity>
 
         {/* Find Recipes Section */}
@@ -27,6 +70,11 @@ const HomeScreen = () => {
         <TouchableOpacity style={styles.buttonContainer} onPress={() => router.push('/fridge')}>
           <Text style={styles.buttonText}>Fridge</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -46,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     fontFamily: 'sans-serif-condensed',
     fontStyle: 'italic',
-    color: '#2E7D32',
+    color: '#000',
     textTransform: 'capitalize',
   },
   buttonGroup: {
@@ -75,8 +123,8 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 12,
-    borderWidth: 2,
     borderColor: '#FFFFFF',
+    color: "ffffff"
   },
   profileName: {
     fontSize: 24,
@@ -105,6 +153,28 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 1.5,
   },
+  logoutButton: {
+    width: '35%',
+    backgroundColor: '#000', // Red for logout
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+    paddingVertical: 16,
+    marginVertical: 12,
+  },
+  logoutButtonText: {
+    fontSize: 20,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+  },
+  
 });
 
 export default HomeScreen;

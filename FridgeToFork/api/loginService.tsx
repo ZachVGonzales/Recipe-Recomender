@@ -46,14 +46,14 @@ export async function login(username: string, password: string): Promise<string 
 
 
 
-export async function signup(username: string, password: string): Promise<string | null> {
+export async function signup(username: string, password: string, name: string, email: string, favoriteFood: string, birthday: string): Promise<string | null> {
   try {
     const response = await fetch("http://localhost:8080/api/login/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({ username, password }).toString(),
+      body: new URLSearchParams({ username, password, name, email, favoriteFood, birthday}).toString(),
     });
 
     if (response.ok) {

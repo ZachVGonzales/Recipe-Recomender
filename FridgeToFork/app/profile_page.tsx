@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { listUserRecipes} from '../api/userRecipeService'
 import { getToken } from '../api/tokenUtils'
 import { RecipeItem } from '@/types/navigationTypes';
+import { getProfile} from '../api/profileService';
 
 
 interface IngredientItem {
@@ -16,6 +17,40 @@ export default function FridgeScreen() {
   const [searchText, setSearchText] = useState('');
   const [recipes, setRecipes] = useState([]);
   const router = useRouter();
+
+  const [name, setName] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [food, setFood] = useState('');
+  const [email, setEmail] = useState('');
+
+
+  
+  const getProfileInfo = async () => {
+    try {
+      const token = await getToken();
+      if (token) {
+        const profileData = await getProfile(token);
+
+        if (profileData) {
+          setName(profileData.name.trim());
+          setBirthday(profileData.birthday.trim());
+          setFood(profileData.food.trim());
+          setEmail(profileData.email.trim());
+        }
+
+      } else {
+        console.error('Token error');
+      }
+    } catch (error) {
+      console.error('Failed to load user ingredients:', error);
+    }
+  };
+
+  React.useEffect(() => {
+    console.log("Extracted Name:", name);
+        getProfileInfo();
+      }, []);
+
 
   const loadUserRecipes = async () => {
     try {
@@ -67,29 +102,40 @@ export default function FridgeScreen() {
   );  
 
   return (
-    
-    
     <View style={styles.container}>
-                  <Text style={styles.containerTitle}>Profile</Text>
 
-      <View style={styles.subTitleContainer}>
-        <Text style = {styles.fridgeText}>Past Recipes</Text>
-        <TouchableOpacity style={styles.backContainer} onPress={() => router.push('/home')}>
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+<Text style={styles.containerTitle}>Profile</Text>
+
+      {/* Profile Information Section */}
+      <View style={styles.profileSection}>
+        <Text style={styles.profileName}>{name}</Text>
+        <Text style={styles.profileDetail}>Birthday: {birthday}</Text>
+        <Text style={styles.profileDetail}>Email: {email}</Text>
+        <Text style={styles.profileDetail}>Favorite Food: {food}</Text>
       </View>
 
-      
+
+      <View style={styles.subTitleContainer}>
+  <Text style={styles.fridgeText}>Past Recipes</Text>
+  <TouchableOpacity
+    style={styles.backContainer}
+    onPress={() => router.push('/home')} // Ensure '/home' exists in your routes
+  >
+    <Text style={styles.backButtonText}>{'\u2190'} Back</Text> {/* Use Unicode for the arrow */}
+  </TouchableOpacity>
+</View>
+
+
       <FlatList
-        data = {recipes}
-        keyExtractor={item => item.id.toString()}
+        data={recipes}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderRecipeItem}
         horizontal={false}
         numColumns={1}
       />
     </View>
-    
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -99,14 +145,40 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
+  profileSection: {
+    backgroundColor: '#A5D6A7',
+    borderRadius: 10,
+    padding: 20,
+    marginVertical: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  profileName: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  profileDetail: {
+    fontSize: 18,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+
+
   containerTitle: {
     paddingTop: 30,
-    fontSize: 70,
+    fontSize: 90,
     textAlign: 'center',
     marginBottom: 10,
     fontFamily: 'sans-serif-condensed',
     fontStyle: 'italic',
-    color: '#2E7D32',
+    color: '#000',
   },
 
   tabsContainer: {

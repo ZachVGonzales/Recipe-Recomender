@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: 'sans-serif-condensed',
     fontStyle: 'italic',
-    color: '#2E7D32',
+    color: '#000',
   },
   headerContainer: {
     flexDirection: 'row',
