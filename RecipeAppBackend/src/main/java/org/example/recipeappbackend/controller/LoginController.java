@@ -19,7 +19,7 @@ public class LoginController {
     private ProfileRepository profileRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String birthday, @RequestParam String favoriteFood, @RequestParam String email) {
+    public ResponseEntity<String> signup(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String email, @RequestParam String favoriteFood, @RequestParam String birthday) {
         try {
             String userHash = userRepository.getUserHash(username, password);
             if (userRepository.userTableExists(userHash)) {

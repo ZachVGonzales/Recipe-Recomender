@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Text, Switch, FlatList } from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet, Text, FlatList } from 'react-native';
 import { fetchIngredient, searchIngredientName } from '../api/ingredientService';
 import { useRouter } from 'expo-router';
 

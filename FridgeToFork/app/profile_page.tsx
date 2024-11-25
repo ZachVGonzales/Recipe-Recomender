@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet , TextInput} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import { useRouter } from 'expo-router';
 import { listUserRecipes} from '../api/userRecipeService'
 import { getToken } from '../api/tokenUtils'
@@ -14,7 +14,6 @@ interface IngredientItem {
 
 
 export default function FridgeScreen() {
-  const [searchText, setSearchText] = useState('');
   const [recipes, setRecipes] = useState([]);
   const router = useRouter();
 
@@ -71,22 +70,7 @@ export default function FridgeScreen() {
     loadUserRecipes();
   }, []);
 
-  const handleSearch = async (text: string) => {
-    setSearchText(text);
-    const token = await getToken();
-    if (token) {
-      if (text === '') {
-        // Reset to full list when search bar is cleared
-        const data = await listUserRecipes(token);
-        setRecipes(data);
-      } else {
-        // TODO: implement search functionality here
-        console.log("search here...");
-      }
-    } else {
-      console.error("token error");
-    }
-  }
+  
   const handleRecipeSelect = (recipe: RecipeItem) => {
     // Navigate to recipe_details and pass the recipe ID as a parameter
     router.push({pathname: "./recipe_details", params: {id: recipe.id}});

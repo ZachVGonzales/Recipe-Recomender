@@ -50,7 +50,7 @@ if __name__ == "__main__":
       skip_count += 1
       continue
     else:
-      print(f"not skipping !!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      print("not skipping !!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       no_skip_count += 1
       ingredient_ids = json.loads(filtered_PP_df.iloc[0]["ingredient_ids"])
     ingredient_names = []

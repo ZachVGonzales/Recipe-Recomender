@@ -40,17 +40,17 @@ if __name__ == "__main__":
     ingredient_ids = []
     
     for ingredient_name in ingredient_names:
-      ingredient_cursor.execute(f"SELECT id FROM ingredients WHERE name = ?", (ingredient_name,))
+      ingredient_cursor.execute("SELECT id FROM ingredients WHERE name = ?", (ingredient_name,))
       fetch_result = ingredient_cursor.fetchone()
       if fetch_result:
         ingredient_ids.append(fetch_result[0])
       else:
-        ingredient_cursor.execute(f"INSERT INTO ingredients (id, name) VALUES (?, ?)", (ingredient_id, ingredient_name))
+        ingredient_cursor.execute("INSERT INTO ingredients (id, name) VALUES (?, ?)", (ingredient_id, ingredient_name))
         conn.commit()
         ingredient_ids.append(ingredient_id)
         ingredient_id += 1
     
-    recipe_cursor.execute(f"INSERT INTO recipes (id, name, instructions, ingredient_ids, ingredient_values) VALUES (?, ?, ?, ?, ?)", 
+    recipe_cursor.execute("INSERT INTO recipes (id, name, instructions, ingredient_ids, ingredient_values) VALUES (?, ?, ?, ?, ?)", 
                           (recipe_id, recipe_name, json.dumps(instructions), json.dumps(ingredient_ids), json.dumps(ingredient_values)))
     conn.commit()
     recipe_id += 1
