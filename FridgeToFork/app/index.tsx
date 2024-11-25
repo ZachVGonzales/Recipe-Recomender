@@ -1,6 +1,6 @@
-import { login, signup } from '../api/loginService';
+import { login } from '../api/loginService';
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from './AuthContext';
 import { saveToken } from '../api/tokenUtils';
@@ -24,7 +24,7 @@ export default function LoginScreen() {
         await saveToken(token);
         applogin();
         setLoading(false);
-        router.push('./home'); // Navigate to Home
+        router.replace('./home'); // Navigate to Home
         console.log('Token saved securely:', token);
       } else {
         setError('Invalid username or password. Please try again.'); // Invalid credentials error

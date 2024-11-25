@@ -1,4 +1,4 @@
-import { login, signup } from '../api/loginService';
+import { signup } from '../api/loginService';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -83,7 +83,7 @@ export default function CreateAccountScreen() {
     }
 
     try {
-      const token = await signup(username, password, name, birthday, favoriteFood, email);
+      const token = await signup(username, password, name, email, favoriteFood, birthday);
       if (token) {
         await saveToken(token);
         applogin();

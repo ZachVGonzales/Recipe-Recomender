@@ -12,7 +12,6 @@ import { getProfile} from '../api/profileService';
 
 const HomeScreen = () => {
   const router = useRouter();
-  const [profile, setProfile] = useState({});
   const [name, setName] = useState('');
 
 
@@ -23,7 +22,7 @@ const HomeScreen = () => {
       if (token) {
         const profileData = await getProfile(token);
 
-        if (profileData && profileData.name) {
+        if (profileData.name) {
           setName(profileData.name.trim());
         }
 

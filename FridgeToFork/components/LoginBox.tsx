@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
-import { TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import { TextInput, TouchableOpacity} from 'react-native';
 
 const LoginBox: React.VFC = () => {
   const [inputValue, setInputValue] = useState('');

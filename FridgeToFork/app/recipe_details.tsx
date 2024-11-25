@@ -65,22 +65,22 @@ const RecipeDetailScreen = () => {
       </View>
 
       {/* Ingredients Section */}
-      <View style={styles.basicContainer}>
-        <Text style={styles.sectionTitle}>INGREDIENTS</Text>
-        {recipe.ingredients.map((ingredient, index) => (
-          <Text key={index} style={styles.text}>- {ingredient}</Text>
-        ))}
-      </View>
+<View style={styles.basicContainer}>
+  <Text style={styles.sectionTitle}>INGREDIENTS</Text>
+  {recipe.ingredients.map((ingredient) => (
+    <Text key={ingredient} style={styles.text}>- {ingredient}</Text>
+  ))}
+</View>
 
-      {/* Instructions Section */}
-      <View style={styles.basicContainer}>
-        <Text style={styles.sectionTitle}>INSTRUCTIONS</Text>
-        {recipe.instructions.map((step, index) => (
-          <Text key={index} style={styles.text}>
-            {index + 1}. {step}
-          </Text>
-        ))}
-      </View>
+{/* Instructions Section */}
+<View style={styles.basicContainer}>
+  <Text style={styles.sectionTitle}>INSTRUCTIONS</Text>
+  {recipe.instructions.map((step, index) => (
+    <Text key={`${index}-${step}`} style={styles.text}>
+      {index + 1}. {step}
+    </Text>
+  ))}
+</View>
 
       {/* Cooked Button */}
       <TouchableOpacity style={styles.addButton} onPress={() => handleCooked(recipe)}>
