@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getIngredientsByRecipeId , add_recipe } from '@/api/cookedService'
 import { getToken } from '@/api/tokenUtils';
 import { deleteUserIngredient } from '@/api/userIngredientService';
-import Recipe from '@/components/Recipe';
+
 
 
 interface IngredientItem {
